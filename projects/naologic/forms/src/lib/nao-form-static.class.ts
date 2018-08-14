@@ -11,10 +11,6 @@ export class NaoFormStatic {
    * Get all errors from a Abstract Control
    *    -- loop all children
    *    -- eliminate keys that don't have errors
-   *
-   *
-   * @param {AbstractControl} formEl
-   * @returns {{}}
    */
   public static getAllErrors(formEl: AbstractControl) {
     let errs = {};
@@ -57,11 +53,6 @@ export class NaoFormStatic {
 
   /**
    * List the errors in a flat map
-   *
-   *
-   * @param {AbstractControl} formEl
-   * @param {string} path
-   * @returns {{}}
    */
   public static getAllErrorsFlat(formEl: AbstractControl, path = '') {
     const errs2 = {};
@@ -105,13 +96,9 @@ export class NaoFormStatic {
 
   /**
    * Flatten a deep object
-   *
-   * @param object
-   * @param sep
-   * @returns {{} & any}
    */
   public static flatten(object, sep = '/') {
-    return Object.assign( {}, ...function _flatten( objectBit, path = '' ) {
+    const oo = Object.assign( {}, ...function _flatten( objectBit, path = '' ) {
       return [].concat(
         ...Object.keys( objectBit )
           .map(key => typeof objectBit[ key ] === 'object' ?
@@ -120,5 +107,6 @@ export class NaoFormStatic {
           )
       );
     }( object ) );
+    return oo;
   }
 }

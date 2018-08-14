@@ -22,10 +22,6 @@ export class NaoFormGroup extends FormGroup {
 
   /**
    * List the errors in a flat map
-   *
-   *
-   * @param {string} path
-   * @returns {{}}
    */
   public getAllErrorsFlat(path = '') {
     return NaoFormStatic.getAllErrorsFlat(this);

@@ -22,6 +22,12 @@
       ],
       "@nao/forms/*": [
         "dist/nao/forms/*"
+      ],
+      "@naologic/forms": [
+        "dist/naologic/forms"
+      ],
+      "@naologic/forms/*": [
+        "dist/naologic/forms/*"
       ]
     }
   }

@@ -122,38 +122,38 @@
         }
       }
     },
-    "@nao/forms": {
-      "root": "projects/nao/forms",
-      "sourceRoot": "projects/nao/forms/src",
+    "@naologic/forms": {
+      "root": "projects/naologic/forms",
+      "sourceRoot": "projects/naologic/forms/src",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/nao/forms/tsconfig.lib.json",
-            "project": "projects/nao/forms/ng-package.json"
+            "tsConfig": "projects/naologic/forms/tsconfig.lib.json",
+            "project": "projects/naologic/forms/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "projects/nao/forms/ng-package.prod.json"
+              "project": "projects/naologic/forms/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/nao/forms/src/test.ts",
-            "tsConfig": "projects/nao/forms/tsconfig.spec.json",
-            "karmaConfig": "projects/nao/forms/karma.conf.js"
+            "main": "projects/naologic/forms/src/test.ts",
+            "tsConfig": "projects/naologic/forms/tsconfig.spec.json",
+            "karmaConfig": "projects/naologic/forms/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/nao/forms/tsconfig.lib.json",
-              "projects/nao/forms/tsconfig.spec.json"
+              "projects/naologic/forms/tsconfig.lib.json",
+              "projects/naologic/forms/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

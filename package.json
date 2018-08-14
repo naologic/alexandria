@@ -8,7 +8,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4400 --disable-host-check",
-    "build": "ng build @nao/forms --prod && ng build",
+    "build": "ng build @naologic/forms --prod && ng build",
+    "build:lib": "ng build @naologic/forms --prod",
+    "npm:pack": "cd dist/naologic/forms && npm pack",
+    "package": "npm run build:lib && npm run npm:pack",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -17,7 +20,7 @@
     "type": "git",
     "url": "https://github.com/naologic/alexandria.git"
   },
-  "private": false,
+  "public": true,
   "dependencies": {
     "@angular/common": "^6.0.3",
     "@angular/core": "^6.0.3",
