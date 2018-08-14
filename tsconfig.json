@@ -15,6 +15,14 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@nao/forms": [
+        "dist/nao/forms"
+      ],
+      "@nao/forms/*": [
+        "dist/nao/forms/*"
+      ]
+    }
   }
 }
