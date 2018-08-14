@@ -9,6 +9,13 @@ _This is a collection of [naologic](https://naologic.com) public [angular 6](htt
 npm install --save @naologic/forms
 ```
 
+## :page_with_curl: Pipes
+
+```bash
+npm install --save @naologic/pipes
+```
+
+
 ## Publishing a package
 
 Build all packages
