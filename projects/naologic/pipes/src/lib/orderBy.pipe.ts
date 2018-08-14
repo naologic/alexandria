@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'orderBy',
   pure: false
 })
-export class OrderPipe implements PipeTransform {
+export class OrderByPipe implements PipeTransform {
 
   /**
    * Check if a value is a string
@@ -18,10 +18,10 @@ export class OrderPipe implements PipeTransform {
    * Sorts values ignoring the case
    */
   static caseInsensitiveSort(a: any, b: any) {
-    if (OrderPipe.isString(a) && OrderPipe.isString(b)) {
+    if (OrderByPipe.isString(a) && OrderByPipe.isString(b)) {
       return a.localeCompare(b);
     }
-    return OrderPipe.defaultCompare(a, b);
+    return OrderByPipe.defaultCompare(a, b);
   }
 
   /**
@@ -103,7 +103,7 @@ export class OrderPipe implements PipeTransform {
     const isDeepLink = expression && expression.indexOf('.') !== -1;
 
     if (isDeepLink) {
-      expression = OrderPipe.parseExpression(expression);
+      expression = OrderByPipe.parseExpression(expression);
     }
 
     let compareFn: Function;
@@ -111,7 +111,7 @@ export class OrderPipe implements PipeTransform {
     if (comparator && typeof comparator === 'function') {
       compareFn = comparator;
     } else {
-      compareFn = isCaseInsensitive ? OrderPipe.caseInsensitiveSort : OrderPipe.defaultCompare;
+      compareFn = isCaseInsensitive ? OrderByPipe.caseInsensitiveSort : OrderByPipe.defaultCompare;
     }
 
     const array: any[] = value.sort((a: any, b: any): number => {
@@ -126,7 +126,7 @@ export class OrderPipe implements PipeTransform {
         return compareFn(a, b);
       }
 
-      return compareFn(OrderPipe.getValue(a, expression), OrderPipe.getValue(b, expression));
+      return compareFn(OrderByPipe.getValue(a, expression), OrderByPipe.getValue(b, expression));
     });
 
     if (reverse) {
@@ -138,32 +138,28 @@ export class OrderPipe implements PipeTransform {
 
   /**
    * Transform Object
-   *
-   * @returns {any[]}
    */
   private transformObject(value: any | any[], expression?: any, reverse?: boolean, isCaseInsensitive?: boolean, comparator?: Function): any {
-    const parsedExpression = OrderPipe.parseExpression(expression);
+    const parsedExpression = OrderByPipe.parseExpression(expression);
     let lastPredicate = parsedExpression.pop();
-    let oldValue = OrderPipe.getValue(value, parsedExpression);
+    let oldValue = OrderByPipe.getValue(value, parsedExpression);
 
     if (!Array.isArray(oldValue)) {
       parsedExpression.push(lastPredicate);
       lastPredicate = null;
-      oldValue = OrderPipe.getValue(value, parsedExpression);
+      oldValue = OrderByPipe.getValue(value, parsedExpression);
     }
 
     if (!oldValue) {
       return value;
     }
 
-    OrderPipe.setValue(value, this.transform(oldValue, lastPredicate, reverse, isCaseInsensitive), parsedExpression);
+    OrderByPipe.setValue(value, this.transform(oldValue, lastPredicate, reverse, isCaseInsensitive), parsedExpression);
     return value;
   }
 
   /**
    * Apply multiple expressions
-   *
-   * @returns {any}
    */
   private multiExpressionTransform(value: any, expressions: any[], reverse: boolean, isCaseInsensitive: boolean = false, comparator?: Function): any {
     return expressions.reverse().reduce((result: any, expression: any) => {

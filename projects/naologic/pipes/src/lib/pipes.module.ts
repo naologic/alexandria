@@ -1,15 +1,15 @@
 import {ModuleWithProviders, NgModule} from '@angular/core';
-import {OrderPipe} from './orderBy.pipe';
+import {OrderByPipe} from './orderBy.pipe';
 
 @NgModule({
   imports: [
   ],
-  providers: [OrderPipe],
+  providers: [OrderByPipe],
   declarations: [
-    OrderPipe
+    OrderByPipe
   ],
   exports: [
-    OrderPipe
+    OrderByPipe
   ]
 })
 export class NaoPipesModule {
