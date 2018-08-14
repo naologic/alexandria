@@ -161,6 +161,46 @@
           }
         }
       }
+    },
+    "@naologic/pipes": {
+      "root": "projects/naologic/pipes",
+      "sourceRoot": "projects/naologic/pipes/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/naologic/pipes/tsconfig.lib.json",
+            "project": "projects/naologic/pipes/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/naologic/pipes/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/naologic/pipes/src/test.ts",
+            "tsConfig": "projects/naologic/pipes/tsconfig.spec.json",
+            "karmaConfig": "projects/naologic/pipes/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/naologic/pipes/tsconfig.lib.json",
+              "projects/naologic/pipes/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "alexandria"

@@ -8,9 +8,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4400 --disable-host-check",
-    "build": "ng build @naologic/forms --prod && ng build",
-    "build:lib": "ng build @naologic/forms --prod",
-    "npm:pack": "cd dist/naologic/forms && npm pack",
+    "build": "npm run build:lib && ng build",
+    "build:lib": "ng build @naologic/forms --prod && ng build @naologic/pipes --prod",
+    "npm:pack": "cd dist/naologic/forms && npm pack && cd ../pipes && npm pack",
     "package": "npm run build:lib && npm run npm:pack",
     "test": "ng test",
     "lint": "ng lint",
