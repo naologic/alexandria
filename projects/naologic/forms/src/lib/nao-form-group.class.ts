@@ -3,7 +3,7 @@ import {AsyncValidatorFn, ValidatorFn} from '@angular/forms';
 import {isArray, keys, mapValues, isPlainObject, set, get} from 'lodash';
 import {NaoFormStatic} from './nao-form-static.class';
 
-export class NaoFormGroup<T> extends FormGroup {
+export class NaoFormGroup<T = any> extends FormGroup {
   private schema;
 
   constructor(controls: {
