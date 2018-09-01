@@ -1,6 +1,6 @@
 {
   "name": "alexandria",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A collection of Nao public libraries",
   "author": "Gabriel",
   "url": "http://naologic.com",
@@ -22,16 +22,17 @@
   },
   "public": true,
   "dependencies": {
-    "@angular/common": "^6.0.3",
-    "@angular/core": "^6.0.3",
-    "@angular/compiler": "^6.0.3",
     "@angular/animations": "^6.0.3",
+    "@angular/common": "^6.0.3",
+    "@angular/compiler": "^6.0.3",
+    "@angular/core": "^6.0.3",
     "@angular/forms": "^6.0.3",
     "@angular/http": "^6.0.3",
     "@angular/platform-browser": "^6.0.3",
     "@angular/platform-browser-dynamic": "^6.0.3",
     "@angular/router": "^6.0.3",
     "core-js": "^2.5.4",
+    "lodash": "^4.17.10",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"
   },
