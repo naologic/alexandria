@@ -24,4 +24,15 @@ export class NaoFormArray extends FormArray {
   public getAllErrorsFlat(path = '') {
     return NaoFormStatic.getAllErrorsFlat(this);
   }
+
+  /**
+   * Get last item
+   */
+  public getLast(): AbstractControl {
+    if (this.length > 0) {
+      this.at(this.length - 1);
+    } else {
+      return null;
+    }
+  }
 }

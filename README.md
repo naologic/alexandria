@@ -25,7 +25,7 @@ npm run package
 
 Navigate to the package you want to publish/update in npm
 ```$xslt
-cd dist/naologic/{package}
+cd dist/naologic/{package}asda
 ```
 
 Login to the npm user
@@ -34,6 +34,8 @@ npm whoami // << test if you are logged in
 npm adduser // << authorize local machine
 npm login // << duhh
 ```
+
+``
 
 Publish the package 
 ```$xslt

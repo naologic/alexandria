@@ -17,30 +17,3 @@
     <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
   </li>
 </ul>
-
-<form [formGroup]="userForm">
-  <div>
-    <label>Name</label>
-    <input required formControlName="name" type="text">
-    <small *ngIf="name.invalid">Not valid</small>
-  </div>
-  <div>
-    <label>Email</label>
-    <input required formControlName="email" type="email">
-    <small *ngIf="email.invalid">Not valid</small>
-  </div>
-  <div>
-    <label>Last name</label>
-    <input required formControlName="name2" type="text">
-    <small *ngIf="name2.invalid">Not valid</small>
-  </div>
-  <div>
-    <label>Size</label>
-    <select formControlName="size">
-      <option value="small">small</option>
-      <option value="medium">medium</option>
-      <option value="large">large</option>
-    </select>
-    <small *ngIf="size.invalid">Not valid</small>
-  </div>
-</form>
