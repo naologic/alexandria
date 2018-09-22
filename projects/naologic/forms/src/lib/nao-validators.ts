@@ -34,7 +34,6 @@ export class NaoValidators {
    * Validator that checks if control value exists in provided array
    *
    * @param data
-   * @returns {(control:AbstractControl)=>ValidationErrors}
    */
   static inArray(data): ValidatorFn {
     const fn = (control: AbstractControl): ValidationErrors | null => {
@@ -53,7 +52,6 @@ export class NaoValidators {
    * Validator that checks if control value exists in provided object key
    *
    * @param obj
-   * @returns {(control:AbstractControl)=>ValidationErrors}
    */
   static inObjectKey(obj): ValidatorFn {
     const fn =  (control: AbstractControl): ValidationErrors | null => {
@@ -80,7 +78,6 @@ export class NaoValidators {
    *
    * @param obj
    * @param path(string)
-   * @returns {(control:AbstractControl)=>ValidationErrors}
    */
   static inObject(obj, path: string): ValidatorFn {
     const fn =  (control: AbstractControl): ValidationErrors | null => {
@@ -108,7 +105,6 @@ export class NaoValidators {
    * Validator that checks if the control value matches any of the enum values
    *
    * @param EnumObj
-   * @returns {(control:AbstractControl)=>ValidationErrors}
    */
   static isEnum(EnumObj): ValidatorFn {
     const fn = (control: AbstractControl): ValidationErrors | null => {
@@ -116,9 +112,12 @@ export class NaoValidators {
       const invalid = {ok: false, isEnum: false, actualValue: control.value};
       if (EnumObj && !Array.isArray(EnumObj) && typeof EnumObj === 'object') {
         // --> Check if value exists
-        if (Object.values(EnumObj).includes(control.value)) {
-          // --> return invalid
-          return invalid;
+        for (const key in EnumObj) {
+          if (control.value === EnumObj[key]) {
+            // --> return invalid
+            return invalid;
+            break;
+          }
         }
       } else {
         // --> return invalid
@@ -134,7 +133,6 @@ export class NaoValidators {
    * Validator that checks if control value matches any of the enum keys
    *
    * @param EnumObj
-   * @returns {(control:AbstractControl)=>ValidationErrors}
    */
   static inEnumKey(EnumObj): ValidatorFn {
     const fn = (control: AbstractControl): ValidationErrors | null => {
