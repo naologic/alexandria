@@ -16,7 +16,7 @@ npm install --save @naologic/forms
 _Import the validators to your component_
 
 ```typescript 
-import { NaoValidator } from '@naologic/forms'
+import { NaoValidators } from '@naologic/forms'
 ```
 ##### Available Methods
 
@@ -55,7 +55,7 @@ _Validator that requires controls to have a value greater than a number._
     public userForm: FormGroup;
     
     this.userForm = new FormGroup({
-        fruit: new FormControl(11, NaoValidator.min(7));
+        fruit: new FormControl(11, NaoValidators.min(7));
         // => Input validation will pass, 11 is greater than 7
     });
 ```
@@ -80,7 +80,7 @@ _Validator that requires controls to have a value less than a number._
     public userForm: FormGroup;
     
     this.userForm = new FormGroup({
-        fruit: new FormControl(11, NaoValidator.min(12));
+        fruit: new FormControl(11, NaoValidators.min(12));
         // => Input validation will pass, 11 is less than 12
     });
 ```
@@ -334,9 +334,9 @@ _Validator that checks if ONLY ONE condition is true_
              weight: 85
            })
          ])
-       }, { validator: NaoValidator.solveOne(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
+       }, { validator: NaoValidators.solveOne(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
         // --> Form validation will fail (both conditions are true)
-        // -->  This will pass validation ex: NaoValidator.solveOne(['weight', '==', 'animals[0].weight'])
+        // -->  This will pass validation ex: NaoValidators.solveOne(['weight', '==', 'animals[0].weight'])
     }
 ```
 
@@ -374,7 +374,7 @@ Check the example below
              weight: 75
            })
          ])
-       }, { validator: NaoValidator.solveSome(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
+       }, { validator: NaoValidators.solveSome(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
         // --> Form validation will pass, one of the conditions is true ['name', '==', 'animals[0].type']
     }
 ```
@@ -412,7 +412,7 @@ Check the example below
              weight: 75
            })
          ])
-       }, { validator: NaoValidator.solveNone(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
+       }, { validator: NaoValidators.solveNone(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
         // --> Form validation will fail, one of the conditions is true ['name', '==', 'animals[0].type']
     }
 ```
@@ -450,7 +450,7 @@ Check the example below
              weight: 75
            })
          ])
-       }, { validator: NaoValidator.solveAll(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
+       }, { validator: NaoValidators.solveAll(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
          // --> Form validation will fail, only one condition is true ['name', '==', 'animals[0].type']
     }
 ```
