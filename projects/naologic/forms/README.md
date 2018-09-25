@@ -27,6 +27,15 @@ import { NaoValidator } from '@naologic/forms'
 *   `inObject()`
 *   `inEnum()`
 *   `inEnumKey()`
+*   `isSSN()`
+*   `isUSZip()`
+*   `isUSPhone()`
+*   `solveOne()`
+*   `solveSome()`
+*   `solveNone()`
+*   `solveAll()`
+
+# FormControl Validators
 
 ## **min()**
 `min(value)`
@@ -97,7 +106,7 @@ _Validator that checks if control value exists in provided array_
     public userForm: FormGroup;
     
     this.userForm = new FormGroup({
-        fruit: new FormControl('lemon', NaoValidator.inArray(this.arr));
+        fruit: new FormControl('lemon', NaoValidators.inArray(this.arr));
         // => Input validation will not pass, 'lemon' is an element of 'arr' Array
     });
 ```
@@ -126,7 +135,7 @@ _Validator that checks if control value exists in provided object key_
     public userForm: FormGroup;
     
     this.userForm = new FormGroup({
-        size: new FormControl('small', TestValidators.inObjectKey(this.obj));
+        size: new FormControl('small', NaoValidators.inObjectKey(this.obj));
         // => Input validation will not pass, 'small' is a key of 'obj' Object
     });
 ```
@@ -163,7 +172,7 @@ _Validator that checks if control value exists in provided object_
     public userForm: FormGroup;
     
     this.userForm = new FormGroup({
-        size: new FormControl('wallas', TestValidators.inObject(this.user, 'user.personalInfo.address.city'));
+        size: new FormControl('wallas', NaoValidators.inObject(this.user, 'user.personalInfo.address.city'));
         // => Input validation will not pass, 'wallas' is a value of 'user' Object.
     });
     console.log(user.personalInfo.address.city);
@@ -189,7 +198,7 @@ _Validator that checks if control value exists in provided enum object_
     public userForm: FormGroup;
     
     this.userForm = new FormGroup({
-        size: new FormControl('SUN', TestValidators.inEnumKey(DaysOfWeek));
+        size: new FormControl('SUN', NaoValidators.inEnumKey(DaysOfWeek));
         // => Input validation will not pass, 'SUN' is a key of 'DaysOfWeek' enum Object.
     });
     console.log(DaysOfWeek);
@@ -216,9 +225,232 @@ _Validator that checks if the control value matches any of the enum values_
     public userForm: FormGroup;
     
     this.userForm = new FormGroup({
-        size: new FormControl('Monday', TestValidators.inEnumKey(DaysOfWeek));
+        size: new FormControl('Monday', NaoValidators.inEnum(DaysOfWeek));
         // => Input validation will not pass, 'Monday' is a value of 'DaysOfWeek' enum Object.
     });
     console.log(DaysOfWeek);
     // => {SUN: "Sunday", MON: "Monday", TUE: "Tuesday"}
+```
+***
+
+## **isSSN()**
+
+`isSSN()`
+_Validator that checks if control value is a valid US SSN_
+
+##### Returns
+
+*   _ValidationErrors | null_
+
+#### Example
+```typescript
+    public userForm: FormGroup;
+    
+    this.userForm = new FormGroup({
+        ssn: new FormControl('123 45 6789', NaoValidators.isSSN());
+        //--> Input validation will pass
+        // --> Accepted format 123 445 6789, 123-445-6789, 1234456789
+    });
+```
+
+***
+## **isUSZip()**
+
+`isUSZip()`
+_Validator that checks if control value is a valid format of US Zip Code_
+
+##### Returns
+
+*   _ValidationErrors | null_
+
+#### Example
+
+```typescript
+    public userForm: FormGroup;
+    
+    this.userForm = new FormGroup({
+         zip: new FormControl('65567', NaoValidators.isUSZip()),
+        // => Input validation will pass
+    });
+```
+
+***
+## **isUSPhone()**
+
+`isUSPhone()`
+_Validator that checks if control value is a valid US Phone format_
+
+##### Returns
+
+*   _ValidationErrors | null_
+
+#### Example
+
+```typescript
+    public userForm: FormGroup;
+    
+    this.userForm = new FormGroup({
+         phone: new FormControl('123 445 6789', NaoValidators.isUSPhone()),
+        // --> Input validation will pass
+        // --> Accepted format  123 445 6789, 123-445-6789, 1234456789
+    });
+```
+
+***
+
+# FormGroup Validators
+
+***
+
+## **solveOne()**
+
+`solveOne(conditions)`
+_Validator that checks if ONLY ONE condition is true_
+
+##### Arguments
+
+* `conditions(`_`Array`_`)`
+ Multiple `Arrays` of `strings` following this format `[value_1, operator, value_2]`
+ Available opertators `<, >, <=, >=, ==, !=`
+ ex: `['name', '==', 'animals[0].type']`, `['weight', '!=', 'animals[0].weight']`
+ Check the example below
+
+
+##### Returns
+
+*   _ValidationErrors | null_
+
+#### Example
+```typescript
+    public groupForm: FormGroup;
+
+    constructor( private fb: FormBuilder) {
+       this.groupForm = this.fb.group({
+         name: 'Tiger',
+         weight: 85,
+         animals: this.fb.array([
+           this.fb.group({
+             type: 'Tiger',
+             weight: 85
+           })
+         ])
+       }, { validator: NaoValidator.solveOne(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
+        // --> Form validation will fail (both conditions are true)
+        // -->  This will pass validation ex: NaoValidator.solveOne(['weight', '==', 'animals[0].weight'])
+    }
+```
+
+***
+
+## **solveSome()**
+
+`solveSome(conditions)`
+_Validator that checks if at least one condition is truee_
+
+##### Arguments
+
+* `conditions(`_`Array`_`)`
+Multiple `Arrays` of `strings` following this format `[value_1, operator, value_2]`
+Available opertators `<, >, <=, >=, ==, !=`
+ex: `['name', '!=', 'animals[0].type']`, `['weight', '>', 'animals[0].weight']`
+Check the example below
+
+
+##### Returns
+
+*   _ValidationErrors | null_
+
+#### Example
+```typescript
+    public groupForm: FormGroup;
+
+    constructor( private fb: FormBuilder) {
+       this.groupForm = this.fb.group({
+         name: 'Tiger',
+         weight: 85,
+         animals: this.fb.array([
+           this.fb.group({
+             type: 'Tiger',
+             weight: 75
+           })
+         ])
+       }, { validator: NaoValidator.solveSome(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
+        // --> Form validation will pass, one of the conditions is true ['name', '==', 'animals[0].type']
+    }
+```
+
+***
+
+## **solveNone()**
+
+`solveNone(conditions)`
+_Validator that checks if NONE of the condition are true_
+
+##### Arguments
+
+* `conditions(`_`Array`_`)` 
+ Multiple `Arrays` of `strings` following this format `[value_1, operator, value_2]`
+Available opertators `<, >, <=, >=, ==, !=`
+ex: `['name', '==', 'animals[0].type']`, `['weight', '<', 'animals[0].weight']`
+Check the example below
+
+##### Returns
+
+*   _ValidationErrors | null_
+
+#### Example
+```typescript
+    public groupForm: FormGroup;
+
+    constructor( private fb: FormBuilder) {
+       this.groupForm = this.fb.group({
+         name: 'Tiger',
+         weight: 85,
+         animals: this.fb.array([
+           this.fb.group({
+             type: 'Tiger',
+             weight: 75
+           })
+         ])
+       }, { validator: NaoValidator.solveNone(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
+        // --> Form validation will fail, one of the conditions is true ['name', '==', 'animals[0].type']
+    }
+```
+
+***
+
+## **solveAll()**
+
+`solveAll(conditions)`
+_Validator that checks if ALL condition are true_
+
+##### Arguments
+
+* `conditions(`_`Array`_`)`  
+ Multiple `Arrays` of `strings` following this format `[value_1, operator, value_2]`
+Available opertators `<, >, <=, >=, ==, !=`
+ex: `['name', '!=', 'animals[0].type']`, `['weight', '>=', 'animals[0].weight']`
+Check the example below
+
+##### Returns
+
+*   _ValidationErrors | null_
+
+#### Example
+```typescript
+    public groupForm: FormGroup;
+
+    constructor( private fb: FormBuilder) {
+       this.groupForm = this.fb.group({
+         name: 'Tiger',
+         weight: 85,
+         animals: this.fb.array([
+           this.fb.group({
+             type: 'Tiger',
+             weight: 75
+           })
+         ])
+       }, { validator: NaoValidator.solveAll(['name', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight']) });
+         // --> Form validation will fail, only one condition is true ['name', '==', 'animals[0].type']
+    }
 ```
