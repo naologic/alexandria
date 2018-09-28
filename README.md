@@ -1,4 +1,6 @@
-# :fireworks: Alexandria [![Build Status](https://travis-ci.org/naologic/alexandria.svg?branch=master)](https://travis-ci.org/naologic/alexandria)
+# :fireworks: Alexandria 
+[![Build Status](https://travis-ci.org/naologic/alexandria.svg?branch=master)](https://travis-ci.org/naologic/alexandria)
+[![Known Vulnerabilities](https://snyk.io/test/github/naologic/alexandria/badge.svg?targetFile=package.json)](https://snyk.io/test/github/naologic/alexandria?targetFile=package.json)
 
 _This is a collection of [naologic](https://naologic.com) public [angular 6](https://angular.io/) libraries. Each one is published as an individual npm package_
 
@@ -8,12 +10,15 @@ _This is a collection of [naologic](https://naologic.com) public [angular 6](htt
 ```bash
 npm install --save @naologic/forms
 ```
+[![NPM](https://nodei.co/npm/@naologic/forms.png)](https://nodei.co/npm/@naologic/forms/)
+
 
 ## :page_with_curl: Pipes
 
 ```bash
 npm install --save @naologic/pipes
 ```
+[![NPM](https://nodei.co/npm/@naologic/pipes.png)](https://nodei.co/npm/@naologic/pipes/)
 
 
 ## Publishing a package
