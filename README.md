@@ -50,4 +50,4 @@ npm publish --access public
 ### License 
 ![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
 
-_Made with :heart: in San Francisco :us:_
+_Made with :heart: in San Francisco :us:_ by [naologic](https://naologic.com)
