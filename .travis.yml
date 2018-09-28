@@ -1,0 +1,30 @@
+#.travis.yml
+
+sudo: required
+
+dist: trusty
+
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
+
+language: node_js
+
+node_js:
+  - 8.9
+
+branches:
+  only:
+    - master
+
+before_script:
+- set -e
+- npm install -g @angular/cli
+- npm install
+- npm run build:lib
+
+script:
+- ng build --prod
