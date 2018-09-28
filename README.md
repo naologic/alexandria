@@ -1,4 +1,4 @@
-# :fireworks: Alexandria
+# :fireworks: Alexandria [![Build Status](https://travis-ci.org/naologic/alexandria.svg?branch=master)](https://travis-ci.org/naologic/alexandria)
 
 _This is a collection of [naologic](https://naologic.com) public [angular 6](https://angular.io/) libraries. Each one is published as an individual npm package_
 
