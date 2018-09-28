@@ -30,7 +30,7 @@ export class NaoFormArray extends FormArray {
    */
   public getLast(): AbstractControl {
     if (this.length > 0) {
-      this.at(this.length - 1);
+      return this.at(this.length - 1);
     } else {
       return null;
     }

@@ -454,3 +454,323 @@ Check the example below
          // --> Form validation will fail, only one condition is true ['name', '==', 'animals[0].type']
     }
 ```
+***
+
+# NaoFormGrop
+***
+
+_Import NaoFormGroup to your component_
+
+```typescript 
+import { NaoFormGroup } from '@naologic/forms'
+```
+
+##### Available Methods
+
+*   `getValue()`
+*   `getValues()`
+*   `disable()`
+*   `patchDeep()`
+*   `validate()`
+*   `addJSONSchema()`
+*   `removeJSONSchema()`
+*   `getAllErrors()`
+*   `getAllErrorsFlat()`
+
+***
+## **getValue()**
+
+`getValue()`
+_Get form values object_
+
+##### Returns
+
+*  _Object_
+
+#### Example
+```typescript
+    public naoFormGroup: NaoFormGroup;
+
+    this.naoFormGroup = new NaoFormGroup({
+      first: new NaoFormControl('first'),
+      second: new NaoFormControl('second'),
+    });
+    
+   const formValues = this.naoFormGroup.getValue();
+   console.log(formValues);
+   // --> {first: "first", second: "second"}
+   console.log(formValues.first);
+   // --> first
+```
+
+***
+## **getValues()**
+
+`getValue(indexes)`
+_Get specific form values_
+
+##### Arguments
+
+* `indexes(`_`string`_`)`  
+
+##### Returns
+
+*  _Object_
+
+#### Example
+```typescript
+    public naoFormGroup: NaoFormGroup;
+
+    this.naoFormGroup = new NaoFormGroup({
+      first: new NaoFormControl('First control'),
+      second: new NaoFormControl('Second control'),
+      third: new NaoFormControl('Third control'),
+    });
+    
+   const formValues = this.naoFormGroup.getValues('first', 'second');
+   console.log(formValues);
+   // --> {first: "First control", second: "Second control"}
+```
+
+***
+
+## **disable()**
+
+`disable(opts)`
+_Disables the control. This means the control is exempt from validation checks and excluded from the aggregate value of any parent. 
+Its status is `DISABLED`._
+
+##### Arguments
+
+* `opts(`_`Object`_`)` - optional argument
+   `opts` Configuration options that determine how the control propagates changes and emits events after the control is disabled.
+   ```typescript
+   {onlySelf?: boolean, emitEvent?: boolean}
+   ```
+   `onlySelf`: When `true`, mark only this control. When false or not supplied, marks all direct ancestors. Default is `false`..
+  `emitEvent`: When `true` or not supplied (the default), both the `statusChanges` and `valueChanges` observables emit events with the latest status and value when the control is disabled.
+  When `false`, no events are emitted.
+
+##### Returns
+
+*  _void_
+
+#### Example
+```typescript
+    public naoFormGroup: NaoFormGroup;
+
+    this.naoFormGroup = new NaoFormGroup({
+      details: new NaoFormGroup({
+        fullName: new NaoFormControl('John Doe'),
+        // --> 'ssn' form control with invalid value
+        ssn: new NaoFormControl('000 00 0000', NaoValidators.isSSN()),
+      }),
+      address: new NaoFormGroup({
+        // --> 'zip' form control with invalid value
+        zip: new NaoFormControl('00000', NaoValidators.isUSZip()),
+        street: new NaoFormControl('7821 Princess St.'),
+      }),
+    });
+    
+    // We exclude 'details' from Form validation check
+   this.naoFormGroup.controls.details.disable();
+   // Console log all Form errors
+   console.log(this.naoFormGroup.getAllErrors());
+   // --> { address: { zip: { ok: false, isUSZip: false, actualValue: "00000"} } }
+```
+
+***
+
+## **patchDeep()**
+
+`patchDeep(data)`
+_Patches the value of the `FormGroup`. It accepts an object with control names as keys, and does its best to match the values to the correct controls in the group._
+
+##### Arguments
+
+* `data(`_`any`_`)`
+
+##### Returns
+
+*  _void_
+
+#### Example
+```typescript
+    public naoFormGroup: NaoFormGroup;
+
+    this.naoFormGroup = new NaoFormGroup({
+      first: new NaoFormControl(),
+      last: new NaoFormControl(),
+    });
+    
+    console.log(this.naoFormGroup.value);
+   // --> {first: null, last: null}
+   
+   this.naoFormGroup.patchValue({first: 'Nancy'});
+   console.log(this.naoFormGroup.value); 
+   // --> {first: 'Nancy', last: null}
+```
+
+***
+
+## **getAllErrors()**
+
+`getAllErrors()`
+_Get all errors from this form_
+
+##### Returns
+
+*  _null | object_
+
+#### Example
+```typescript
+    public naoFormGroup: NaoFormGroup;
+
+    this.naoFormGroup = new NaoFormGroup({
+      firstName: new NaoFormControl('John'),
+      lastName: new NaoFormControl('Doe'),
+      // -->  'ssn' Form control with invalid value
+      ssn: new NaoFormControl('000 00 0000', NaoValidators.isSSN()),
+    });
+    
+   const getFormErrors = this.naoFormGroup.getAllErrors();
+   console.log(getFormErrors);
+   // --> {first: {ok: false, isSSN: false, actualValue: "000 00 0000"}}
+```
+
+***
+
+## **getAllErrorsFlat()**
+
+`getAllErrorsFlat(path)`
+_List the errors in a flat map_
+
+##### Arguments
+
+* `path(`_`string`_`)`
+
+##### Returns
+
+*  _Object_
+
+#### Example
+```typescript
+    public naoFormGroup: NaoFormGroup;
+
+    this.naoFormGroup = new NaoFormGroup({
+      details: new NaoFormGroup({
+        fullName: new NaoFormControl('John Doe'),
+        // --> 'ssn' form control with invalid value
+        ssn: new NaoFormControl('000 00 0000', NaoValidators.isSSN()),
+      })
+    });
+    
+   const getFormErrors = this.naoFormGroup.getAllErrors('details');
+   console.log(getFormErrors);
+   // --> {details.ssn: {ok: false, isSSN: false, actualValue: "000 00 0000"}}
+```
+***
+
+# NaoFormArray
+
+_Import NaoFormArray to your component_
+
+```typescript 
+import { NaoFormArray } from '@naologic/forms'
+```
+
+##### Available Methods
+
+*   `getLast()`
+*   `getAllErrors()`
+*   `getAllErrorsFlat()`
+
+***
+
+## **getLast()**
+
+`getLast()`
+_Get last item from FormArray_
+
+##### Returns
+
+*  _AbstractControl_
+
+#### Example
+```typescript
+    public naoFormArray: NaoFormArray;
+
+    this.naoFormArray =  new TestFormArray([
+      new NaoFormControl('Control 1'),
+      new NaoFormControl('Control 2'),
+      new NaoFormControl('Control 3'),
+    ]);
+    const lastItem = this.naoFormArray.getLast();
+    console.log(lastItem.value);
+    // --> Control 3
+```
+***
+
+## **getAllErrorsFlat()**
+
+`getAllErrorsFlat(path)`
+_List the errors in a flat map_
+
+##### Arguments
+
+* `path(`_`string`_`)` - Optional argument
+
+##### Returns
+
+*  _Object_
+
+#### Example
+```typescript
+    public naoFormArray: NaoFormArray;
+
+    this.naoFormArray =  new NaoFormArray([
+      new NaoFormGroup({
+        name: new NaoFormControl('John Doe'),
+        // invalid ssn
+        ssn: new NaoFormControl('00 000 0000', NaoValidators.isSSN()),
+      }),
+      new NaoFormGroup({
+        name: new NaoFormControl('Jane Doe'),
+        ssn: new NaoFormControl('34 544 7646', NaoValidators.isSSN()),
+      })
+    ]);
+    
+   console.log(this.naoFormArray.getAllErrorsFlat());
+   // --> { [0].ssn: {ok: false, isSSN: false, actualValue: "000 00 0000"} }
+```
+***
+
+## **getAllErrors()**
+
+`getAllErrors()`
+_Get all errors from this form_
+
+##### Returns
+
+*  _Object[]_
+
+#### Example
+```typescript
+    public naoFormArray: NaoFormArray;
+
+    this.naoFormArray =  new NaoFormArray([
+      new NaoFormGroup({
+        name: new NaoFormControl('John Doe'),
+        // invalid ssn
+        ssn: new NaoFormControl('00 000 0000', NaoValidators.isSSN()),
+      }),
+      new NaoFormGroup({
+        name: new NaoFormControl('Jane Doe'),
+        ssn: new NaoFormControl('34 544 7646', NaoValidators.isSSN()),
+      })
+    ]);
+    
+   console.log(this.naoFormArray.getAllErrors());
+   // --> [{ 0: { ssn: {ok: false, isSSN: false, actualValue: "000 00 0000"}} }]
+```
+***
