@@ -80,7 +80,7 @@ _Validator that requires controls to have a value less than a number._
     public userForm: FormGroup;
     
     this.userForm = new FormGroup({
-        fruit: new FormControl(11, NaoValidators.min(12));
+        fruit: new FormControl(11, NaoValidators.max(12));
         // => Input validation will pass, 11 is less than 12
     });
 ```
