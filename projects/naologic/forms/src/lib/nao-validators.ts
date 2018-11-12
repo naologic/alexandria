@@ -2,6 +2,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angu
 import get from 'lodash/get';
 
 export class NaoValidators {
+  static EmailRegex =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   /**
    * Validator that requires controls to have a value greater than a number.
    */
@@ -15,6 +16,48 @@ export class NaoValidators {
     };
     return fn;
   }
+
+    /**
+   * Validator to check the length of a string
+   */
+  public static maxLength(length: number): ValidatorFn {
+    const fn = (control: AbstractControl): ValidationErrors | null => {
+      if (control.value === null || control.value === undefined || (typeof control.value === "string" && control.value.length <= length)) {
+        return null;
+      }
+
+      return { 'maxLength': length, 'actualValue': control.value };
+    }
+    return fn;
+  }
+
+  /**
+   * Validator to check the length of a string
+   */
+  public static minLength(length: number): ValidatorFn {
+    const fn = (control: AbstractControl): ValidationErrors | null => {
+      if (control.value === null || control.value === undefined || (typeof control.value === "string" && control.value.length >= length)) {
+        return null;
+      }
+
+      return { 'minLength': length, 'actualValue': control.value };
+    }
+    return fn;
+  }
+
+  /**
+   * Validator to check if string is email
+   */
+  public static isEmail(): ValidatorFn {
+    const fn = (control: AbstractControl): ValidationErrors | null => {
+      if (typeof control.value === "string" && NaoValidators.EmailRegex.test(control.value.toLowerCase())) {
+        return null;
+      }
+      return { 'isEmail': false, 'actualValue': control.value };
+    }
+    return fn;
+  }
+
 
   /**
    * Validator that requires controls to have a value less than a number.
