@@ -1,8 +1,8 @@
 import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
 import get from 'lodash/get';
 
+export const EmailRegex =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export class NaoValidators {
-  static EmailRegex =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   /**
    * Validator that requires controls to have a value greater than a number.
    */
@@ -50,7 +50,8 @@ export class NaoValidators {
    */
   public static isEmail(): ValidatorFn {
     const fn = (control: AbstractControl): ValidationErrors | null => {
-      if (typeof control.value === "string" && NaoValidators.EmailRegex.test(control.value.toLowerCase())) {
+    
+      if (typeof control.value === "string" && EmailRegex.test(control.value.toLowerCase())) {
         return null;
       }
       return { 'isEmail': false, 'actualValue': control.value };
