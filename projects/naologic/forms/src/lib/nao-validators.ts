@@ -25,7 +25,7 @@ export class NaoValidators {
         return null;
       }
 
-      return { 'maxLength': length < control.value.length, 'actualValue': control.value };
+      return { ok:false, maxLength: length, 'actualValue': control.value, actualLength: control.value.length };
     }
     return fn;
   }
@@ -39,7 +39,7 @@ export class NaoValidators {
         return null;
       }
 
-      return { 'minLength': length > control.value.length, 'actualValue': control.value };
+      return { ok: false, minLength: length, 'actualValue': control.value, actualLength: control.value.length };
     }
     return fn;
   }
