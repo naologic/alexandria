@@ -44,7 +44,8 @@ npm login // << duhh
 
 Publish the package 
 ```$xslt
-npm publish --access public
+npm run publish:pipes
+npm run publish:forms
 ```
 
 ### License 
