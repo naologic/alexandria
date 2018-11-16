@@ -173,9 +173,11 @@ export class NaoValidators {
       control.markAsTouched();
 
       for (const key in enumObj) {
-        if (control.value === enumObj[key]) {
-          // --> return invalid
-          return null;
+        if (enumObj.hasOwnProperty(key)) {
+          if (control.value === enumObj[key]) {
+            // --> return invalid
+            return null;
+          }
         }
       }
 
