@@ -1,77 +1,59 @@
 import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
-import get from 'lodash/get';
+import { get, isPlainObject} from 'lodash';
 
 export class NaoValidators {
   /**
    * Validator that requires controls to have a value greater than a number.
    */
   public static min(min: number): ValidatorFn {
-    const fn = (control: AbstractControl): ValidationErrors | null => {
-      if (isEmptyInputValue(control.value) || isEmptyInputValue(min)) {
-        return {'min': min, 'actualValue': control.value};
-      }
-      const value = parseFloat(control.value);
-      return !isNaN(value) && value < min ? {'min': min, 'actualValue': control.value} : null;
-    };
-    return fn;
-  }
-
-  /**
-  * Validator to check the length of a string
-  */
-  public static maxLength(length: number): ValidatorFn {
-    const fn = (control: AbstractControl): ValidationErrors | null => {
-      if (control.value === null || control.value === undefined || (typeof control.value === 'string' && control.value.length <= length)) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine || isNaN(+min) || control.value === null) {
         return null;
       }
 
-      return { ok: false, maxLength: length, 'actualValue': control.value, actualLength: control.value.length };
+      control.markAsTouched();
+
+      if (+control.value < min) {
+        return { min: {ok: false, min, actualValue: control.value } };
+      }
     };
-    return fn;
   }
 
   /**
-   * Validator to check the length of a string
+   * Validator that requires controls to have a value greater than a number.
    */
-  public static minLength(length: number): ValidatorFn {
-    const fn = (control: AbstractControl): ValidationErrors | null => {
-      if (control.value === null || control.value === undefined || (typeof control.value === 'string' && control.value.length >= length)) {
+  public static max(max: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine || isNaN(+max) || control.value === null) {
         return null;
       }
 
-      return { ok: false, minLength: length, 'actualValue': control.value, actualLength: control.value.length };
+      control.markAsTouched();
+
+      if (+control.value > max) {
+        return { max: {ok: false, max, actualValue: control.value } };
+      }
     };
-    return fn;
   }
 
   /**
    * Validator to check if string is email
    */
-  public static isEmail(): ValidatorFn {
-    const fn = (control: AbstractControl): ValidationErrors | null => {
-      const EmailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      if (typeof control.value === 'string' && EmailRegex.test(control.value.toLowerCase())) {
-        return null;
-      }
-      return { 'isEmail': false, 'actualValue': control.value };
-    };
-    return fn;
+  public static isEmail(control: AbstractControl): { [key: string]: boolean } | null {
+    if (control.pristine || typeof control.value !== 'string') {
+      return null;
+    }
+
+    control.markAsTouched();
+
+    const EmailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (EmailRegex.test(control.value.toLowerCase())) {
+      return null;
+    }
+
+    return { isEmail: false };
   }
 
-
-  /**
-   * Validator that requires controls to have a value less than a number.
-   */
-  public static max(max: number): ValidatorFn {
-    const fn =  (control: AbstractControl): ValidationErrors | null => {
-      if (isEmptyInputValue(control.value) || isEmptyInputValue(max)) {
-        return {'max': max, 'actualValue': control.value};
-      }
-      const value = parseFloat(control.value);
-      return !isNaN(value) && value > max ? {'max': max, 'actualValue': control.value} : null;
-    };
-    return fn;
-  }
 
   /**
    * Validator that checks if control value exists in provided array
@@ -79,16 +61,59 @@ export class NaoValidators {
    * @param data
    */
   static inArray(data): ValidatorFn {
-    const fn = (control: AbstractControl): ValidationErrors | null => {
-      if (Array.isArray(data) && data.length > 0 && data.indexOf(control.value) === -1 ) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine || !Array.isArray(data)) {
+        return null;
+      }
+
+      control.markAsTouched();
+
+      if (data.indexOf(control.value) > -1 ) {
         // --> return null
         return null;
       }
       // --> return invalid
-      return {ok: false, inArray: false, actualValue: control.value};
+      return { inArray: {ok: false, inArray: false, actualValue: control.value} };
     };
+  }
 
-    return fn;
+
+
+
+
+
+  /**
+   * Validator to check the length of a string
+   */
+  public static maxLength(length: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine || typeof control.value !== 'string') {
+        return null;
+      }
+
+      control.markAsTouched();
+
+      if (control.value.length > length) {
+        return {maxLength: { ok: false, maxLength: length, actualValue: control.value, actualLength: control.value.length }};
+      }
+    };
+  }
+
+  /**
+   * Validator to check the length of a string
+   */
+  public static minLength(length: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine || typeof control.value !== 'string') {
+        return null;
+      }
+
+      control.markAsTouched();
+
+      if (control.value.length < length) {
+        return {minLength: { ok: false, minLength: length, actualValue: control.value, actualLength: control.value.length }};
+      }
+    };
   }
 
   /**
@@ -96,24 +121,20 @@ export class NaoValidators {
    *
    * @param obj
    */
-  static inObjectKey(obj): ValidatorFn {
-    const fn =  (control: AbstractControl): ValidationErrors | null => {
-      // --> Create: invalid object
-      const invalid = {ok: false, inObjectKey: false, actualValue: control.value};
-      if (obj && !Array.isArray(obj) && typeof obj === 'object' && Object.keys(obj).length > 0) {
-        // --> Check if key exists
-        if (Object.keys(obj).indexOf(control.value) > -1) {
-          // --> return invalid
-          return invalid;
-        }
-      } else {
-        // --> return invalid
-        return invalid;
+  public static inObjectKey(obj): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine || !isPlainObject(obj) || typeof control.value !== 'string') {
+        return null;
       }
-      // --> Return null
+
+      control.markAsTouched();
+
+      if (Object.keys(obj).indexOf(control.value) > -1) {
+        return {inObjectKey: { ok: false, keys: Object.keys(obj), actualValue: control.value }};
+      }
+
       return null;
     };
-    return fn;
   }
 
   /**
@@ -122,56 +143,65 @@ export class NaoValidators {
    * @param obj
    * @param path(string)
    */
-  static inObject(obj, path: string): ValidatorFn {
-    const fn =  (control: AbstractControl): ValidationErrors | null => {
-      // --> Create: invalid object
-      const invalid = {ok: false, inObject: false, actualValue: control.value};
-      if (obj && !Array.isArray(obj) && typeof obj === 'object' &&
-        Object.keys(obj).length > 0 && typeof path === 'string' && path.length > 0) {
-
-        if (get(obj, path) === control.value) {
-          // --> return invalid
-          return invalid;
-        }
-
-      } else {
-        // --> return invalid
-        return invalid;
+  public static inObject(obj, path = ''): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine || !isPlainObject(obj) || typeof control.value !== undefined) {
+        return null;
       }
-      // --> Return null
+
+      control.markAsTouched();
+
+      if (get(obj, path) !== control.value) {
+        return {inObject: { ok: false, requiredValue: get(obj, path), actualValue: control.value }};
+      }
+
       return null;
     };
-    return fn;
   }
 
   /**
    * Validator that checks if the control value matches any of the enum values
    *
-   * @param EnumObj
+   * @param enumObj
    */
-  static inEnum(EnumObj): ValidatorFn {
-    const fn = (control: AbstractControl): ValidationErrors | null => {
-      // --> Create: invalid object
-      const invalid = {ok: false, inEnum: false, actualValue: control.value};
-      if (EnumObj && !Array.isArray(EnumObj) && typeof EnumObj === 'object') {
-        // --> Check if value exists
-        for (const key in EnumObj) {
-          if (control.value === EnumObj[key]) {
-            // break;
-            // --> return invalid
-            return invalid;
-          }
-        }
-      } else {
-        // --> return invalid
-        return invalid;
+  public static inEnum(enumObj): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine || Array.isArray(enumObj) || typeof control.value !== undefined) {
+        return null;
       }
-      // --> Return null
-      return null;
+
+      control.markAsTouched();
+
+      for (const key in enumObj) {
+        if (control.value === enumObj[key]) {
+          // --> return invalid
+          return null;
+        }
+      }
+
+      return {inEnum: { ok: false, requiredValue: enumObj, actualValue: control.value }};
     };
-    return fn;
   }
 
+
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
+  /// DE AICI IN JOS TREBUIE REFACUT
   /**
    * Validator that checks if control value matches any of the enum keys
    *
@@ -413,11 +443,6 @@ export class NaoValidators {
     return fn;
   }
 
-}
-
-function isEmptyInputValue(value: any): boolean {
-  // we don't check for string here so it also works with arrays
-  return value == null || value.length === 0;
 }
 
 /**
