@@ -21,12 +21,12 @@ export class NaoValidators {
   */
   public static maxLength(length: number): ValidatorFn {
     const fn = (control: AbstractControl): ValidationErrors | null => {
-      if (control.value === null || control.value === undefined || (typeof control.value === "string" && control.value.length <= length)) {
+      if (control.value === null || control.value === undefined || (typeof control.value === 'string' && control.value.length <= length)) {
         return null;
       }
 
-      return { ok:false, maxLength: length, 'actualValue': control.value, actualLength: control.value.length };
-    }
+      return { ok: false, maxLength: length, 'actualValue': control.value, actualLength: control.value.length };
+    };
     return fn;
   }
 
@@ -35,12 +35,12 @@ export class NaoValidators {
    */
   public static minLength(length: number): ValidatorFn {
     const fn = (control: AbstractControl): ValidationErrors | null => {
-      if (control.value === null || control.value === undefined || (typeof control.value === "string" && control.value.length >= length)) {
+      if (control.value === null || control.value === undefined || (typeof control.value === 'string' && control.value.length >= length)) {
         return null;
       }
 
       return { ok: false, minLength: length, 'actualValue': control.value, actualLength: control.value.length };
-    }
+    };
     return fn;
   }
 
@@ -50,11 +50,11 @@ export class NaoValidators {
   public static isEmail(): ValidatorFn {
     const fn = (control: AbstractControl): ValidationErrors | null => {
       const EmailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      if (typeof control.value === "string" && EmailRegex.test(control.value.toLowerCase())) {
+      if (typeof control.value === 'string' && EmailRegex.test(control.value.toLowerCase())) {
         return null;
       }
       return { 'isEmail': false, 'actualValue': control.value };
-    }
+    };
     return fn;
   }
 
