@@ -194,6 +194,35 @@ export class NaoValidators {
   }
 
   /**
+  * Validator that checks if control value matches any of the enum keys
+  *
+  * @param EnumObj
+  */
+  static inEnumKey(EnumObj): ValidatorFn {
+    const fn = (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine){
+        return null;
+      }
+      control.markAsTouched();
+      // --> Set: invalid object
+      const invalid = { ok: false, inEnumKey: false, actualValue: control.value };
+      if (EnumObj && !Array.isArray(EnumObj) && typeof EnumObj === 'object') {
+        // --> Check if control  values equals enum key
+        if (String(EnumObj[EnumObj[control.value]]) === control.value || EnumObj[EnumObj[control.value]] === control.value) {
+          // --> Return invalid
+          return invalid;
+        }
+      } else {
+        // --> Return invalid
+        return invalid;
+      }
+      // --> Return null
+      return null;
+    };
+    return fn;
+  }
+
+  /**
    * Validator that checks if control value is a valid US SSN
    *
    */
