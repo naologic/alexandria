@@ -6,7 +6,7 @@ export class NaoValidators {
    * Validator that requires controls to have a value greater than a number.
    */
   public static min(min: number): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
+    const fn = (control: AbstractControl): ValidationErrors | null => {
       if (control.pristine || isNaN(+min) || control.value === null) {
         return null;
       }
@@ -14,16 +14,17 @@ export class NaoValidators {
       control.markAsTouched();
 
       if (+control.value < min) {
-        return { min: {ok: false, min, actualValue: control.value } };
+        return { min: { ok: false, min, actualValue: control.value } };
       }
     };
+    return fn;
   }
 
   /**
    * Validator that requires controls to have a value greater than a number.
    */
   public static max(max: number): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
+    const fn = (control: AbstractControl): ValidationErrors | null => {
       if (control.pristine || isNaN(+max) || control.value === null) {
         return null;
       }
@@ -34,6 +35,7 @@ export class NaoValidators {
         return { max: {ok: false, max, actualValue: control.value } };
       }
     };
+     return fn;
   }
 
   /**
@@ -61,7 +63,7 @@ export class NaoValidators {
    * @param data
    */
   static inArray(data): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
+    const fn = (control: AbstractControl): ValidationErrors | null => {
       if (control.pristine || !Array.isArray(data)) {
         return null;
       }
@@ -75,6 +77,7 @@ export class NaoValidators {
       // --> return invalid
       return { inArray: {ok: false, inArray: false, actualValue: control.value} };
     };
+    return fn;
   }
 
 
@@ -86,7 +89,7 @@ export class NaoValidators {
    * Validator to check the length of a string
    */
   public static maxLength(length: number): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
+    const fn =  (control: AbstractControl): ValidationErrors | null => {
       if (control.pristine || typeof control.value !== 'string') {
         return null;
       }
@@ -97,13 +100,14 @@ export class NaoValidators {
         return {maxLength: { ok: false, maxLength: length, actualValue: control.value, actualLength: control.value.length }};
       }
     };
+    return fn;
   }
 
   /**
    * Validator to check the length of a string
    */
   public static minLength(length: number): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
+    const fn = (control: AbstractControl): ValidationErrors | null => {
       if (control.pristine || typeof control.value !== 'string') {
         return null;
       }
@@ -114,6 +118,7 @@ export class NaoValidators {
         return {minLength: { ok: false, minLength: length, actualValue: control.value, actualLength: control.value.length }};
       }
     };
+    return fn;
   }
 
   /**
@@ -122,7 +127,7 @@ export class NaoValidators {
    * @param obj
    */
   public static inObjectKey(obj): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
+    const fn = (control: AbstractControl): ValidationErrors | null  => {
       if (control.pristine || !isPlainObject(obj) || typeof control.value !== 'string') {
         return null;
       }
@@ -135,6 +140,7 @@ export class NaoValidators {
 
       return null;
     };
+    return fn;
   }
 
   /**
@@ -144,7 +150,7 @@ export class NaoValidators {
    * @param path(string)
    */
   public static inObject(obj, path = ''): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
+    const fn =  (control: AbstractControl): ValidationErrors | null => {
       if (control.pristine || !isPlainObject(obj) || typeof control.value !== undefined) {
         return null;
       }
@@ -157,6 +163,7 @@ export class NaoValidators {
 
       return null;
     };
+    return fn;
   }
 
   /**
@@ -165,7 +172,7 @@ export class NaoValidators {
    * @param enumObj
    */
   public static inEnum(enumObj): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
+    const fn = (control: AbstractControl): ValidationErrors | null => {
       if (control.pristine || Array.isArray(enumObj) || typeof control.value !== undefined) {
         return null;
       }
@@ -181,43 +188,29 @@ export class NaoValidators {
         }
       }
 
-      return {inEnum: { ok: false, requiredValue: enumObj, actualValue: control.value }};
+      return { inEnum: { ok: false, requiredValue: enumObj, actualValue: control.value } };
     };
+    return fn;
   }
 
-
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
-  /// DE AICI IN JOS TREBUIE REFACUT
   /**
-   * Validator that checks if control value matches any of the enum keys
-   *
-   * @param EnumObj
-   */
+  * Validator that checks if control value matches any of the enum keys
+  *
+  * @param EnumObj
+  */
   static inEnumKey(EnumObj): ValidatorFn {
     const fn = (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine){
+        return null;
+      }
+      control.markAsTouched();
       // --> Set: invalid object
-      const invalid = {ok: false, inEnumKey: false, actualValue: control.value};
+      const invalid = { ok: false, inEnumKey: false, actualValue: control.value };
       if (EnumObj && !Array.isArray(EnumObj) && typeof EnumObj === 'object') {
         // --> Check if control  values equals enum key
         if (String(EnumObj[EnumObj[control.value]]) === control.value || EnumObj[EnumObj[control.value]] === control.value) {
           // --> Return invalid
-          return invalid ;
+          return invalid;
         }
       } else {
         // --> Return invalid
@@ -235,17 +228,18 @@ export class NaoValidators {
    */
   static isSSN(): ValidatorFn {
     const fn = (control: AbstractControl): ValidationErrors | null => {
-      // --> Declare invalid object
-      const invalid = {ok: false, isSSN: false, actualValue: control.value};
-      if (control.value && typeof control.value === 'string') {
-        // --> Define pattern
-        const ssnPattern = /^(?!000|666)[0-9]{3}([ -]?)(?!00)[0-9]{2}\1(?!0000)[0-9]{4}$/;
-        // --> Check if string matches the pattern
-        return ssnPattern.test(control.value) ? null : invalid;
-      } else {
-        // --> Return invalid
-        return invalid;
+      if (control.pristine || typeof control.value !== 'string') {
+        return null;
       }
+
+      control.markAsTouched();
+      // --> Declare invalid object
+      const invalid = { ok: false, isSSN: false, actualValue: control.value };
+
+      // --> Define pattern
+      const ssnPattern = /^(?!000|666)[0-9]{3}([ -]?)(?!00)[0-9]{2}\1(?!0000)[0-9]{4}$/;
+      // --> Check if string matches the pattern
+      return ssnPattern.test(control.value) ? null : invalid;
     };
     return fn;
   }
@@ -255,18 +249,19 @@ export class NaoValidators {
    *
    */
   static isUSZip(): ValidatorFn {
-    const fn = (control: AbstractControl): ValidationErrors | null => {
-      // --> Declare invalid object
-      const invalid = {ok: false, isUSZip: false, actualValue: control.value};
-      if (control.value && typeof control.value === 'string') {
-        // --> Pattern
-        const zipPattern = /^(?!0{2})[0-9]{5}$/;
-        // --> Check if string matches the pattern
-        return zipPattern.test(control.value) ? null : invalid;
-      } else {
-        // --> Return invalid
-        return invalid;
+    const fn =  (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine || typeof control.value !== 'string') {
+        return null;
       }
+      control.markAsTouched();
+
+      // --> Declare invalid object
+      const invalid = { ok: false, isUSZip: false, actualValue: control.value };
+
+      // --> Pattern
+      const zipPattern = /^(?!0{2})[0-9]{5}$/;
+      // --> Check if string matches the pattern
+      return zipPattern.test(control.value) ? null : invalid;
     };
     return fn;
   }
@@ -277,17 +272,18 @@ export class NaoValidators {
    */
   static isUSPhone(): ValidatorFn {
     const fn = (control: AbstractControl): ValidationErrors | null => {
-      // --> Declare invalid object
-      const invalid = {ok: false, isUSZip: false, actualValue: control.value};
-      if (control.value && typeof control.value === 'string') {
-        // --> Pattern
-        const phonePattern = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-        // --> Check if string matches the pattern
-        return phonePattern.test(control.value) ? null : invalid;
-      } else {
-        // --> Return invalid
-        return invalid;
+      if (control.pristine || typeof control.value !== 'string') {
+        return null;
       }
+      control.markAsTouched();
+
+      // --> Declare invalid object
+      const invalid = { ok: false, isUSZip: false, actualValue: control.value };
+
+      // --> Pattern
+      const phonePattern = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+      // --> Check if string matches the pattern
+      return phonePattern.test(control.value) ? null : invalid;
     };
     return fn;
   }
@@ -317,7 +313,11 @@ export class NaoValidators {
    * @param conditions(Array)
    */
   static solveOne(...conditions: any[]): ValidatorFn {
-    const fn = (group: FormGroup): ValidationErrors | null => {
+    const fn =  (group: FormGroup): ValidationErrors | null => {
+      if(group.pristine){
+        return null;
+      }
+      group.markAsTouched();
       if (conditions.length > 0) {
         // --> Check conditions and get an array of booleans
         const validate: boolean[] = validateOperation(conditions, group);
@@ -329,7 +329,7 @@ export class NaoValidators {
       return {ok: false, solveOne: false, actualValue: group.value};
     };
     return fn;
-  }
+   }
 
   /**
    * Validator that checks if at least one condition is true
@@ -356,6 +356,10 @@ export class NaoValidators {
    */
   static solveSome(...conditions: any[]): ValidatorFn {
     const fn = (group: FormGroup): ValidationErrors | null => {
+      if(group.pristine){
+        return null;
+      }
+      group.markAsTouched();
       if (conditions.length > 0) {
         // --> Check conditions and get an array of booleans
         const validate: boolean[] = validateOperation(conditions, group);
@@ -393,7 +397,11 @@ export class NaoValidators {
    * @param conditions(Array)
    */
   static solveNone(...conditions: any[]): ValidatorFn {
-    const fn = (group: FormGroup): ValidationErrors | null => {
+   const fn =  (group: FormGroup): ValidationErrors | null => {
+      if(group.pristine){
+        return null;
+      }
+      group.markAsTouched();
       if (conditions.length > 0) {
         // --> Check conditions and get an array of booleans
         const validate = validateOperation(conditions, group);
@@ -432,6 +440,10 @@ export class NaoValidators {
    */
   static solveAll(...conditions: any[]): ValidatorFn {
     const fn = (group: FormGroup): ValidationErrors | null => {
+      if(group.pristine){
+        return null;
+      }
+      group.markAsTouched();
       if (conditions.length > 0) {
         // --> Check conditions and get an array of booleans
         const validate = validateOperation(conditions, group);
