@@ -62,12 +62,12 @@
 <form [formGroup]="groupForm">
   <div>
     <label>Name </label>
-    <input  formControlName="name_grp" type="text">
+    <input formControlName="name_grp" type="text">
     <small *ngIf="name_grp.invalid">Not valid</small>
   </div>
   <div>
     <label>Weight </label>
-    <input  formControlName="weight" type="number">
+    <input formControlName="weight" type="number">
     <small *ngIf="weight.invalid">Not valid</small>
   </div>
   <br>
@@ -79,7 +79,7 @@
       <input formControlName="type" type="text">
       <br>
       <label>Weight </label>
-      <input  formControlName="weight" type="number">
+      <input formControlName="weight" type="number">
       <small *ngIf="animal.invalid">Not valid</small>
       <button (click)="deleteAnimal(i)" class="btn btn-danger">Delete</button>
     </div>
@@ -89,4 +89,83 @@
   <p>Invalid: {{groupForm.invalid}}</p>
   <button [disabled]="groupForm.invalid" type="button" (click)="send()">Send</button>
   <br><br>
+</form>
+
+
+
+<h6>MIXED GROUP</h6>
+<form [formGroup]="mixedGroup">
+  <div formGroupName="userForm">
+    <div>
+      <label>Name </label>
+      <input required formControlName="name" type="text">
+      <small> pristine:{{name.pristine}}, touched: {{name.touched}},dirty: {{name.dirty}}, valid:{{name.valid}} </small>
+    </div>
+    <br>
+    <div>
+      <label>Email </label>
+      <input required formControlName="email" type="email">
+      <small> pristine:{{email.pristine}}, touched: {{email.touched}},dirty: {{email.dirty}}, valid:{{email.valid}} </small>
+    </div>
+    <br>
+    <div>
+      <label>Name 2 </label>
+      <input required formControlName="name2" type="text">
+      <small> pristine:{{name2.pristine}}, touched: {{name2.touched}},dirty: {{name2.dirty}}, valid:{{name2.valid}} </small>
+    </div>
+    <br>
+    <div>
+      <label>ZIP </label>
+      <input required formControlName="zip" type="text">
+      <small> pristine:{{zip.pristine}}, touched: {{zip.touched}},dirty: {{zip.dirty}}, valid:{{zip.valid}} </small>
+    </div>
+    <br>
+    <div>
+      <label>SSN </label>
+      <input required formControlName="ssn" type="text">
+      <small> pristine:{{ssn.pristine}}, touched: {{ssn.touched}},dirty: {{ssn.dirty}}, valid: {{ssn.valid}}</small>      
+    </div>
+    <br>
+    <div>
+      <label>Phone </label>
+      <input required formControlName="phone" type="text">
+      <small> pristine:{{phone.pristine}}, touched: {{phone.touched}},dirty: {{phone.dirty}}, valid: {{phone.valid}}</small>  
+    </div>
+    <br>
+    <button (click)="resetMixed()" type="button">Reset</button>
+    <button (click)="markAllDirty()" type="button">Mark All Dirty</button>
+    <button (click)="markAllUntouched()" type="button">Mark All Untouched</button>
+    <button (click)="markAllPristine()" type="button">Mark All Pristine</button>
+  </div>
+  <div formGroupName="groupForm">
+    <div>
+      <label>Name </label>
+      <input formControlName="name_grp" type="text">
+      <small *ngIf="name_grp.invalid">Not valid</small>
+    </div>
+    <div>
+      <label>Weight </label>
+      <input formControlName="weight" type="number">
+      <small *ngIf="weight.invalid">Not valid</small>
+    </div>
+    <br>
+    <div formArrayName="animals">
+      <div *ngFor="let animal of animals.controls; let i=index" [formGroupName]="i">
+        <label>Animals</label>
+        <br>
+        <label>Name </label>
+        <input formControlName="type" type="text" >
+        <br>
+        <label>Weight </label>
+        <input formControlName="weight" type="number">
+        <small *ngIf="invalid">Not valid</small>
+        <button (click)="deleteAnimal(i)" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+
+    <button type="button" (click)="addNewAnimal()">Add</button>
+    <p>Invalid: {{invalid}}</p>
+    <button [disabled]="invalid" type="button" (click)="send()">Send</button>
+    <br><br>
+  </div>
 </form>

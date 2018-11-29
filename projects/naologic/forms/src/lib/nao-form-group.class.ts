@@ -17,33 +17,37 @@ export class NaoFormGroup<T = any> extends FormGroup {
 
  
   // https://github.com/naologic/alexandria/issues/20
-  private markAs( formGroup: NaoFormGroup|NaoFormArray, type: 'touched'|'untouched'|'dirty'|'pristine'|'pending', options? : { onlySelf?:boolean, emitEvent?: boolean } ): void {
+  private markAs(formGroup: NaoFormGroup | NaoFormArray, type: 'touched' | 'untouched' | 'dirty' | 'pristine' | 'pending', options?: { onlySelf?: boolean, emitEvent?: boolean }): void {
+    this.callNativeMarkAsFunction(formGroup, type, options);
     mapValues(formGroup.controls, (control) => {
-      if ( control instanceof NaoFormGroup || control instanceof NaoFormArray ){
-        this.markAs( control, type, options );
+      if (control instanceof NaoFormGroup || control instanceof NaoFormArray) {        
+        this.markAs(control, type, options);
       }
       else {
-        switch (type) {
-          case 'touched':
-            control.markAsTouched(options);
-            break;
-          case 'untouched':
-            control.markAsUntouched(options);
-            break;
-          case 'dirty':
-            control.markAsDirty(options);
-            break;
-          case 'pristine':
-            control.markAsPristine(options);
-            break;
-          case 'pending':
-            control.markAsPending(options);
-            break;
-        }
-       }
-    });    
+        this.callNativeMarkAsFunction(control, type, options);
+      }
+    });
   }
 
+  private callNativeMarkAsFunction( control: AbstractControl, type: 'touched'|'untouched'|'dirty'|'pristine'|'pending', options? : { onlySelf?:boolean, emitEvent?: boolean } ){
+    switch (type) {
+      case 'touched':
+        control.markAsTouched(options);
+        break;
+      case 'untouched':
+        control.markAsUntouched(options);
+        break;
+      case 'dirty':
+        control.markAsDirty(options);
+        break;
+      case 'pristine':
+        control.markAsPristine(options);
+        break;
+      case 'pending':
+        control.markAsPending(options);
+        break;
+    }
+  }
   /**
    * Iterates through all the children of the NaoFormGroup, NaoFormArray and calls markAsTouched on all controls;
    * for NaoFormControl it references the native function markAsTouched  
