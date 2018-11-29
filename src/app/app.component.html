@@ -158,14 +158,14 @@
         <br>
         <label>Weight </label>
         <input formControlName="weight" type="number">
-        <small *ngIf="invalid">Not valid</small>
+        <small *ngIf="weight.invalid">Not valid</small>
         <button (click)="deleteAnimal(i)" class="btn btn-danger">Delete</button>
       </div>
     </div>
 
     <button type="button" (click)="addNewAnimal()">Add</button>
-    <p>Invalid: {{invalid}}</p>
-    <button [disabled]="invalid" type="button" (click)="send()">Send</button>
+    <p>Invalid: {{groupForm.invalid}}</p>
+    <button [disabled]="groupForm.invalid" type="button" (click)="send()">Send</button>
     <br><br>
   </div>
 </form>
