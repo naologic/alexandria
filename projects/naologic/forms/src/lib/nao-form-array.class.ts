@@ -2,7 +2,7 @@ import { mapValues } from 'lodash';
 import { AbstractControl, AbstractControlOptions, FormArray } from '@angular/forms';
 import { AsyncValidatorFn, ValidatorFn } from '@angular/forms';
 import  {NaoFormStatic } from './nao-form-static.class';
-import { NaoFormGroup } from '@naologic/forms/public_api';
+import { NaoFormGroup } from './nao-form-group.class';
 
 export class NaoFormArray extends FormArray {
 
