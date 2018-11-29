@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import { NaoValidators } from '@naologic/forms';
+import { NaoValidators,NaoFormGroup, NaoFormBuilder } from '@naologic/forms';
 
 enum DaysOfWeek {
   SUN = '1', MON = 'Monday', TUE = 'Tue', WED = 'Wed', THU = 'Thu', FRI = 'Fri', SAT = 'Sat'
@@ -25,16 +25,17 @@ export class AppComponent implements OnInit {
       }
     }
   };
-  public userForm: FormGroup;
-  public groupForm: FormGroup;
+  public userForm: NaoFormGroup;
+  public groupForm: NaoFormGroup;
+  public mixedGroup: NaoFormGroup;
 
 
-  constructor( private fb: FormBuilder) {
-    this.userForm = new FormGroup({
+  constructor( private fb: NaoFormBuilder) {
+    this.userForm = new NaoFormGroup({
       name: new FormControl('1', NaoValidators.inObject(this.obj2, 'small.b.c')),
       email: new FormControl(1, NaoValidators.inEnumKey(DaysOfWeek2)),
       name2: new FormControl('Monday', NaoValidators.inEnum(DaysOfWeek)),
-      ssn: new FormControl('123 45 6789', NaoValidators.isSSN()),
+      ssn: new FormControl('', NaoValidators.isSSN()),
       zip: new FormControl('65567', NaoValidators.isUSZip()),
       phone: new FormControl('123 445 6789', NaoValidators.isUSPhone()),
       size: new FormControl(null),
@@ -50,7 +51,14 @@ export class AppComponent implements OnInit {
           weight: null
         })
       ])
-    }, {validator: NaoValidators.solveOne(['name_grp', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight'], ['weight', '==', 'animals[1].weight'])});
+    }, {validator: NaoValidators.solveOne(['name_grp', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight'], ['weight', '==', 'animals[1].weight'])}) as NaoFormGroup;
+
+
+    this.mixedGroup = new NaoFormGroup({
+      userForm: this.userForm,
+      groupForm: this.groupForm
+
+    });
 
   }
 
@@ -105,7 +113,13 @@ export class AppComponent implements OnInit {
     console.log(this.groupForm.value);
   }
   reset() {
+    
     this.userForm.reset();
+  }
+
+  resetMixed() {
+     this.userForm.reset();
+     this.groupForm.reset();
   }
 
   addNewAnimal() {
@@ -115,7 +129,15 @@ export class AppComponent implements OnInit {
     });
     this.animals.push(animal);
   }
-
+  markAllDirty(){
+    this.mixedGroup.markAllAsDirty();
+  }
+  markAllUntouched(){
+    this.mixedGroup.markAllAsUntouched();
+  }
+  markAllPristine(){
+    this.mixedGroup.markAllAsPristine();
+  }
   deleteAnimal(index) {
     this.animals.removeAt(index);
   }
