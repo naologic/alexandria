@@ -3,16 +3,16 @@ import {AsyncValidatorFn, ValidatorFn} from '@angular/forms';
 import {isArray, keys, mapValues, isPlainObject, set, get} from 'lodash';
 import {NaoFormStatic} from './nao-form-static.class';
 import { NaoFormArray } from './nao-form-array.class';
+import { NaoFormOptions } from './nao-form-options';
 
 
 export class NaoFormGroup<T = any> extends FormGroup {
   private schema;
-
   constructor(controls: {
       [key: string]: AbstractControl;
-    }, validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
+    }, options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null 
   ) {
-    super(controls, validatorOrOpts, asyncValidator);    
+    super(controls, options, asyncValidator);    
   }
 
  
