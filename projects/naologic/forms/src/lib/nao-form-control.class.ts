@@ -4,8 +4,9 @@ import { NaoFormOptions } from './nao-form-options';
 
 export class NaoFormControl extends FormControl {
   constructor(
-    formState?: any, options?: NaoFormOptions 
+    formState?: any, 
+    options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null 
   ) {
-    super(formState, options);
+    super(formState, options, asyncValidator);
   }
 }

@@ -10,9 +10,9 @@ export class NaoFormGroup<T = any> extends FormGroup {
   private schema;
   constructor(controls: {
       [key: string]: AbstractControl;
-    }, options?: NaoFormOptions    
+    }, options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null 
   ) {
-    super(controls, options);    
+    super(controls, options, asyncValidator);    
   }
 
  

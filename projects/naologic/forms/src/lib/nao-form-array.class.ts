@@ -8,9 +8,10 @@ import { NaoFormOptions } from './nao-form-options';
 export class NaoFormArray extends FormArray {
 
   constructor(
-    controls: AbstractControl[], options?: NaoFormOptions 
+    controls: AbstractControl[], 
+    options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null 
   ) {
-    super(controls, options);
+    super(controls, options, asyncValidator);
   }
 
   // https://github.com/naologic/alexandria/issues/20
