@@ -15,11 +15,11 @@ export class NaoFormBuilder extends FormBuilder {
     return super.group(controlsConfig,extra) as NaoFormGroup;
   }
 
-  public array(controlsConfig: any[], extra?: NaoFormOptions): NaoFormArray {
+  public naoArray(controlsConfig: any[], extra?: NaoFormOptions): NaoFormArray {
     return super.array(controlsConfig, extra.validators, extra.asyncValidators) as NaoFormArray;
   }
 
-  public control(formState: any, extra?: NaoFormOptions): NaoFormControl {
+  public naoControl(formState: any, extra?: NaoFormOptions): NaoFormControl {
     return super.control(formState, extra.validators, extra.asyncValidators) as NaoFormControl;
   }
 }
