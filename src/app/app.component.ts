@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
 
   constructor( private fb: NaoFormBuilder) {
     this.userForm = new NaoFormGroup({
-      name: new NaoFormControl('1',{ validators: NaoValidators.inObject(this.obj2, 'small.b.c') } ),
+      name: new NaoFormControl('1',{ validators: [ NaoValidators.inObject(this.obj2, 'small.b.c') ]} ),
       email: new FormControl(1, NaoValidators.inEnumKey(DaysOfWeek2)),
       name2: new FormControl('Monday', NaoValidators.inEnum(DaysOfWeek)),
       ssn: new FormControl('', NaoValidators.isSSN()),
