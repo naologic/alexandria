@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import { NaoValidators,NaoFormGroup, NaoFormBuilder } from '@naologic/forms';
+import { NaoValidators,NaoFormGroup, NaoFormBuilder, NaoFormControl } from '@naologic/forms';
 
 enum DaysOfWeek {
   SUN = '1', MON = 'Monday', TUE = 'Tue', WED = 'Wed', THU = 'Thu', FRI = 'Fri', SAT = 'Sat'
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
 
   constructor( private fb: NaoFormBuilder) {
     this.userForm = new NaoFormGroup({
-      name: new FormControl('1', NaoValidators.inObject(this.obj2, 'small.b.c')),
+      name: new NaoFormControl('1',{ validators: NaoValidators.inObject(this.obj2, 'small.b.c') } ),
       email: new FormControl(1, NaoValidators.inEnumKey(DaysOfWeek2)),
       name2: new FormControl('Monday', NaoValidators.inEnum(DaysOfWeek)),
       ssn: new FormControl('', NaoValidators.isSSN()),
@@ -40,8 +40,8 @@ export class AppComponent implements OnInit {
       phone: new FormControl('123 445 6789', NaoValidators.isUSPhone()),
       size: new FormControl(null),
     });
-
-
+    
+  
     this.groupForm = this.fb.group({
       name_grp: 'tiger',
       weight: 80,
@@ -51,13 +51,12 @@ export class AppComponent implements OnInit {
           weight: null
         })
       ])
-    }, {validator: NaoValidators.solveOne(['name_grp', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight'], ['weight', '==', 'animals[1].weight'])}) as NaoFormGroup;
+    }, {validators: NaoValidators.solveOne(['name_grp', '==', 'animals[0].type'], ['weight', '==', 'animals[0].weight'], ['weight', '==', 'animals[1].weight'])});
 
 
     this.mixedGroup = new NaoFormGroup({
       userForm: this.userForm,
       groupForm: this.groupForm
-
     });
 
   }

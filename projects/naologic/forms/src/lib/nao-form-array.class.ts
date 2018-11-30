@@ -3,13 +3,14 @@ import { AbstractControl, AbstractControlOptions, FormArray } from '@angular/for
 import { AsyncValidatorFn, ValidatorFn } from '@angular/forms';
 import  {NaoFormStatic } from './nao-form-static.class';
 import { NaoFormGroup } from './nao-form-group.class';
+import { NaoFormOptions } from './nao-form-options';
 
 export class NaoFormArray extends FormArray {
 
   constructor(
-    controls: AbstractControl[], validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
+    controls: AbstractControl[], options?: NaoFormOptions 
   ) {
-    super(controls, validatorOrOpts, asyncValidator);
+    super(controls, options);
   }
 
   // https://github.com/naologic/alexandria/issues/20
