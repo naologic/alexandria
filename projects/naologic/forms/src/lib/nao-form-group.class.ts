@@ -15,6 +15,14 @@ export class NaoFormGroup<T = any> extends FormGroup {
     super(controls, options, asyncValidator);    
   }
 
+  public enableDelay(delay:number, opts?: { onlySelf?: boolean;emitEvent?: boolean; }):void {
+    setTimeout(()=> this.enable(opts), delay);
+  }
+  
+  public disableDelay(delay:number, opts?: { onlySelf?: boolean;emitEvent?: boolean; }):void {
+    setTimeout(()=> this.disable(opts), delay);
+  }
+
   public getValuesTouched(formGroup : NaoFormGroup | NaoFormArray , results: String[] = []) : String[]{
 
     mapValues(formGroup.controls,(control)=>{
