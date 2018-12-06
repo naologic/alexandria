@@ -15,6 +15,26 @@ export class NaoFormGroup<T = any> extends FormGroup {
     super(controls, options, asyncValidator);    
   }
 
+  public enableDelay(delay:number, opts?: { onlySelf?: boolean;emitEvent?: boolean; }):void {
+    setTimeout(()=> this.enable(opts), delay);
+  }
+  
+  public disableDelay(delay:number, opts?: { onlySelf?: boolean;emitEvent?: boolean; }):void {
+    setTimeout(()=> this.disable(opts), delay);
+  }
+
+  public getValuesTouched(formGroup : NaoFormGroup | NaoFormArray , results: String[] = []) : String[]{
+
+    mapValues(formGroup.controls,(control)=>{
+      if (control instanceof NaoFormGroup || control instanceof NaoFormArray){
+        this.getValuesTouched(control,results);
+        }
+      else if (control.touched){ 
+          results.push(control.value);
+        }
+    });
+    return results;
+    }
  
   // https://github.com/naologic/alexandria/issues/20
   private markAs(formGroup: NaoFormGroup | NaoFormArray, type: 'touched' | 'untouched' | 'dirty' | 'pristine' | 'pending', options?: { onlySelf?: boolean, emitEvent?: boolean }): void {

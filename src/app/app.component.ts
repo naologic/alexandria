@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   public userForm: NaoFormGroup;
   public groupForm: NaoFormGroup;
   public mixedGroup: NaoFormGroup;
+  touchedValues: String[];
 
 
   constructor( private fb: NaoFormBuilder) {
@@ -58,6 +59,8 @@ export class AppComponent implements OnInit {
       userForm: this.userForm,
       groupForm: this.groupForm
     });
+
+    this.touchedValues = this.mixedGroup.getValuesTouched(this.mixedGroup,[]);
 
   }
 
@@ -130,6 +133,7 @@ export class AppComponent implements OnInit {
   }
   markAllDirty(){
     this.mixedGroup.markAllAsDirty();
+    this.touchedValues = this.mixedGroup.getValuesTouched(this.mixedGroup,[]);
   }
   markAllUntouched(){
     this.mixedGroup.markAllAsUntouched();
@@ -140,5 +144,6 @@ export class AppComponent implements OnInit {
   deleteAnimal(index) {
     this.animals.removeAt(index);
   }
-
 }
+
+
