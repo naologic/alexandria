@@ -148,7 +148,7 @@ const callNativeMarkAsFunction = (control: AbstractControl, type: 'touched'|'unt
  * @param type
  */
 const getValuesByMarkedAs = (control: AbstractControl, type: 'touched'|'untouched'|'dirty'|'pristine'|'pending'): { ok: boolean, value?: any, type: string } => {
-  if (['touched', 'untouched', 'dirty', 'pristine', 'pending'].indexOf(type) > -1) {
+  if (['touched', 'untouched', 'dirty', 'pristine', 'pending'].indexOf(type) === -1) {
     throw Error(`The only allowed 'markAs' types are touched|untouched|dirty|pristine|pending. I can't accept ${type}`);
   }
   // -->Init: res
