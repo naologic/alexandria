@@ -1,60 +1,109 @@
 import { mapValues } from 'lodash';
 import { AbstractControl, AbstractControlOptions, FormArray } from '@angular/forms';
 import { AsyncValidatorFn, ValidatorFn } from '@angular/forms';
-import  {NaoFormStatic } from './nao-form-static.class';
+import { callNativeMarkAsFunction, getValuesByMarkedAs, NaoFormStatic } from './nao-form-static.class';
 import { NaoFormGroup } from './nao-form-group.class';
 import { NaoFormOptions } from './nao-form-options';
+import { NaoAbstractControlOptions} from './nao-form.interface';
 
-export class NaoFormArray extends FormArray {
 
+
+
+export class NaoFormArray<T = any> extends FormArray {
   constructor(
-    controls: AbstractControl[], 
-    options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null 
+    controls: AbstractControl[],
+    options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
   ) {
     super(controls, options, asyncValidator);
   }
 
-  // https://github.com/naologic/alexandria/issues/20
-  private markAs( formGroup: NaoFormGroup|NaoFormArray, type: 'touched'|'untouched'|'dirty'|'pristine'|'pending', options? : { onlySelf?:boolean, emitEvent?: boolean } ): void {
-    mapValues(formGroup.controls, (control) => {
-      if ( control instanceof NaoFormGroup || control instanceof NaoFormArray ){
-        this.markAs( control, type, options );
-      }
-      else {
-        switch (type) {
-          case 'touched':
-            control.markAsTouched(options);
-            break;
-          case 'untouched':
-            control.markAsUntouched(options);
-            break;
-          case 'dirty':
-            control.markAsDirty(options);
-            break;
-          case 'pristine':
-            control.markAsPristine(options);
-            break;
-          case 'pending':
-            control.markAsPending(options);
-            break;
+  /**
+   * Return only the values of abstract controls marked as `touched`
+   */
+  public getTouchedValues(): Partial<T[]> {
+    // -->Get: only values markAs type
+    const values = getValuesByMarkedAs(this, 'touched');
+
+    // -->Check: and return
+    return values && values.ok ? values.value : null;
+  }
+
+  /**
+   * Return only the values of abstract controls marked as `untouched`
+   */
+  public getUntouchedValues(): Partial<T[]> {
+    // -->Get: only values markAs type
+    const values = getValuesByMarkedAs(this, 'untouched');
+
+    // -->Check: and return
+    return values && values.ok ? values.value : null;
+  }
+
+  /**
+   * Return only the values of abstract controls marked as `dirty`
+   */
+  public getDirtyValues(): Partial<T[]> {
+    // -->Get: only values markAs type
+    const values = getValuesByMarkedAs(this, 'dirty');
+
+    // -->Check: and return
+    return values && values.ok ? values.value : null;
+  }
+
+  /**
+   * Return only the values of abstract controls marked as `pristine`
+   */
+  public getPristineValues(): Partial<T[]> {
+    // -->Get: only values markAs type
+    const values = getValuesByMarkedAs(this, 'pristine');
+
+    // -->Check: and return
+    return values && values.ok ? values.value : null;
+  }
+
+  /**
+   * Return only the values of abstract controls marked as `pending`
+   */
+  public getPendingValues(): Partial<T[]> {
+    // -->Get: only values markAs type
+    const values = getValuesByMarkedAs(this, 'pending');
+
+    // -->Check: and return
+    return values && values.ok ? values.value : null;
+  }
+
+
+  /**
+   * Trigger the native `markAs` function
+   * @param formGroup
+   * @param type
+   * @param options
+   */
+  private markAs(formGroup: NaoFormGroup|NaoFormArray, type: 'touched'|'untouched'|'dirty'|'pristine'|'pending', options?: NaoAbstractControlOptions): void {
+    if (formGroup && Array.isArray(formGroup.controls)) {
+      formGroup.controls.map((control) => {
+        if ( control instanceof NaoFormGroup || control instanceof NaoFormArray ){
+          this.markAs( control, type, options );
+        } else {
+          callNativeMarkAsFunction(control, type, options);
         }
-       }
-    });    
+      });
+    }
   }
 
   /**
    * Iterates through all the children of the NaoFormGroup, NaoFormArray and calls markAsTouched on all controls;
-   * for NaoFormControl it references the native function markAsTouched  
+   * for NaoFormControl it references the native function markAsTouched
   */
-  public markAllAsTouched(opts?: { onlySelf?: boolean }): void {
+  public markAllAsTouched(opts?: NaoAbstractControlOptions): void {
     this.markAs( this, 'touched', opts );
   }
 
   /**
    * Iterates through all the children of the NaoFormGroup, NaoFormArray and calls markAsUntouched on all controls
-   * for NaoFormControl it references the native function markAsUntouched  
+   * for NaoFormControl it references the native function markAsUntouched
   */
-  public markAllAsUntouched(opts?: { onlySelf?: boolean }): void {
+  public markAllAsUntouched(opts?: NaoAbstractControlOptions): void {
     this.markAs( this, 'untouched', opts );
   }
 
@@ -62,7 +111,7 @@ export class NaoFormArray extends FormArray {
    * Iterates through all the children of the NaoFormGroup, NaoFormArray and calls markAsDirty on all controls
    * for NaoFormControl it references the native function markAsDirty
   */
-  public markAllAsDirty(opts?: { onlySelf?: boolean }): void {
+  public markAllAsDirty(opts?: NaoAbstractControlOptions): void {
     this.markAs( this, 'dirty', opts );
   }
 
@@ -70,7 +119,7 @@ export class NaoFormArray extends FormArray {
    * Iterates through all the children of the NaoFormGroup, NaoFormArray and calls markAsPristine on all controls
    * for NaoFormControl it references the native function markAsPristine
   */
-  public markAllAsPristine(opts?: { onlySelf?: boolean }): void {
+  public markAllAsPristine(opts?: NaoAbstractControlOptions): void {
     this.markAs( this, 'pristine', opts );
   }
 
@@ -78,7 +127,7 @@ export class NaoFormArray extends FormArray {
    * Iterates through all the children of the NaoFormGroup, NaoFormArray and calls markAsPending on all controls
    * for NaoFormControl it references the native function markAsPending
   */
-  public markAllAsPending(opts?: { onlySelf?: boolean, emitEvent?: boolean }): void {
+  public markAllAsPending(opts?: NaoAbstractControlOptions): void {
     this.markAs( this, 'pending', opts );
   }
 

@@ -1,5 +1,10 @@
 import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { mapValues, filter, isArray, isPlainObject, keys, merge, last } from 'lodash';
+import {NaoAbstractControlOptions} from './nao-form.interface';
+import {NaoFormGroup} from './nao-form-group.class';
+import {NaoFormArray} from './nao-form-array.class';
+import {injectComponentFactoryResolver} from '@angular/core/src/render3';
+import {NaoFormControl} from './nao-form-control.class';
 
 /**
  * Form Helper
@@ -110,3 +115,88 @@ export class NaoFormStatic {
     return oo;
   }
 }
+
+/**
+ * Call the native function by type
+ * @param control
+ * @param type
+ * @param options
+ */
+const callNativeMarkAsFunction = (control: AbstractControl, type: 'touched'|'untouched'|'dirty'|'pristine'|'pending', options?: NaoAbstractControlOptions ) => {
+  switch (type) {
+    case 'touched':
+      control.markAsTouched(options);
+      break;
+    case 'untouched':
+      control.markAsUntouched(options);
+      break;
+    case 'dirty':
+      control.markAsDirty(options);
+      break;
+    case 'pristine':
+      control.markAsPristine(options);
+      break;
+    case 'pending':
+      control.markAsPending(options);
+      break;
+  }
+};
+
+/**
+ * Get only the values that have a specific `markAs` flag
+ * @param control
+ * @param type
+ */
+const getValuesByMarkedAs = (control: AbstractControl, type: 'touched'|'untouched'|'dirty'|'pristine'|'pending'): { ok: boolean, value?: any, type: string } => {
+  if (['touched', 'untouched', 'dirty', 'pristine', 'pending'].indexOf(type) > -1) {
+    throw Error(`The only allowed 'markAs' types are touched|untouched|dirty|pristine|pending. I can't accept ${type}`);
+  }
+  // -->Init: res
+  const res = {ok: false, value: null, type};
+
+  // -->Check: if the `markAs` property is as expected
+  if (control && control.hasOwnProperty(type) && control[type]) {
+    res.ok = true;
+    if (control instanceof FormGroup || control instanceof NaoFormGroup) {
+      // -->Init: the value by type
+      res.value = {} as any;
+
+      mapValues(control.controls, (ctrl, index) => {
+        // -->Check: current value
+        const {ok, value} = getValuesByMarkedAs(ctrl, type);
+        // -->Return: if valid
+        if (ok) {
+          res.value[index] = value;
+        }
+      });
+    } else if (control instanceof FormArray || control instanceof NaoFormArray) {
+      if (Array.isArray(control.controls)) {
+        // -->Init: the value by type
+        res.value = [];
+
+        // -->Loop: values
+        control.controls.map(ctrl => {
+          // -->Check: current value
+          const {ok, value} = getValuesByMarkedAs(ctrl, type);
+          // -->Return: if valid
+          if (ok) {
+            res.value.push(value);
+          }
+        });
+      } else {
+        throw Error(`I received a form array with no controls index. This is not normal`);
+      }
+    } else if (control instanceof FormControl || control instanceof NaoFormControl) {
+      res.value = control.value;
+    } else {
+      throw Error(`Invalid instance type made it's way into NaoFromGroup getTouchedValues! ${typeof control}`);
+    }
+  }
+  // -->Return: the result
+  return res;
+};
+
+export {
+  callNativeMarkAsFunction,
+  getValuesByMarkedAs
+};
