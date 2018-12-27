@@ -9,6 +9,7 @@
 /node_modules
 /bower_components
 /package-lock.json
+package-lock.json
 
 # functions
 /functions/lib
