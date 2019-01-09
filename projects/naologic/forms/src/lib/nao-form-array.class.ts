@@ -1,11 +1,10 @@
-import { mapValues } from 'lodash';
+import { isArray, mapValues} from 'lodash';
 import { AbstractControl, AbstractControlOptions, FormArray } from '@angular/forms';
 import { AsyncValidatorFn, ValidatorFn } from '@angular/forms';
 import { callNativeMarkAsFunction, getValuesByMarkedAs, NaoFormStatic } from './nao-form-static.class';
 import { NaoFormGroup } from './nao-form-group.class';
 import { NaoFormOptions } from './nao-form-options';
 import { NaoAbstractControlOptions} from './nao-form.interface';
-
 
 
 
@@ -72,6 +71,29 @@ export class NaoFormArray<T = any> extends FormArray {
     return values && values.ok ? values.value : null;
   }
 
+  /**
+   * Get value of this shit
+   */
+  public getValue(): T[] {
+    return super.getRawValue() as T[];
+  }
+
+  /**
+   * Get forma array values by index
+   */
+  public getValues(...indexes: number[]): Partial<T[]> {
+    if (Array.isArray(indexes)) {
+      const fa = new NaoFormArray(indexes
+        .map(i => this.at(i))
+        .filter( e => {
+          if (e) {
+            return e;
+          }
+      }));
+      return fa.getValue() as Partial<T[]>;
+    }
+    return [] as Partial<T[]>;
+  }
 
   /**
    * Trigger the native `markAs` function
@@ -82,7 +104,7 @@ export class NaoFormArray<T = any> extends FormArray {
   private markAs(formGroup: NaoFormGroup|NaoFormArray, type: 'touched'|'untouched'|'dirty'|'pristine'|'pending', options?: NaoAbstractControlOptions): void {
     if (formGroup && Array.isArray(formGroup.controls)) {
       formGroup.controls.map((control) => {
-        if ( control instanceof NaoFormGroup || control instanceof NaoFormArray ){
+        if ( control instanceof NaoFormGroup || control instanceof NaoFormArray ) {
           this.markAs( control, type, options );
         } else {
           callNativeMarkAsFunction(control, type, options);
