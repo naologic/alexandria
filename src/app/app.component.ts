@@ -9,6 +9,11 @@ enum DaysOfWeek2 {
   SUN, MON, TUE, WED, THU, FRI, SAT
 }
 
+interface LoginLog {
+  id: string;
+  timestamp: number;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -30,6 +35,7 @@ export class AppComponent implements OnInit {
   public mixedGroup: NaoFormGroup;
   touchedValues: String[];
   testForm: NaoFormGroup;
+
 
 
   constructor( private fb: NaoFormBuilder) {
