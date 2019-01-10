@@ -9,4 +9,11 @@ export class NaoFormControl extends FormControl {
   ) {
     super(formState, options, asyncValidator);
   }
+
+  /**
+   * Resets the form control, marking it pristine and untouched, and setting the value to null.
+   */
+  empty( formState: any = null, options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void {
+    return super.reset( formState, options );
+  }
 }

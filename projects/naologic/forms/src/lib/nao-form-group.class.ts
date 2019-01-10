@@ -8,6 +8,7 @@ import { NaoAbstractControlOptions } from './nao-form.interface';
 import { NaoFormControl } from './nao-form-control.class';
 
 
+
 export class NaoFormGroup<T = any> extends FormGroup {
   private schema;
   constructor(controls: {
@@ -250,8 +251,7 @@ export class NaoFormGroup<T = any> extends FormGroup {
     }
     return null;
   }
-
-  /**
+ /**
    *  Retrieves a child control given the control's name or path from a formGroup typecasted as as NaoFormControl
    */
   public getAsNaoFormControl(path: Array<string | number> | string): NaoFormControl | null {
@@ -293,6 +293,13 @@ export class NaoFormGroup<T = any> extends FormGroup {
       return getValueFrom as A;
     }
     return null;
+  }
+
+  /**
+   * Resets the FormGroup, marks all descendants are marked pristine and untouched, and the value of all descendants to null.
+   */
+  empty(value: any = {}, options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void {
+    return super.reset( value, options );
   }
 }
 
