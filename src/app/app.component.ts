@@ -1,12 +1,17 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import { NaoValidators,NaoFormGroup, NaoFormBuilder, NaoFormControl } from '@naologic/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, AbstractControl } from '@angular/forms';
+import { NaoValidators,NaoFormGroup, NaoFormBuilder, NaoFormControl, NaoFormArray } from '@naologic/forms';
 
 enum DaysOfWeek {
   SUN = '1', MON = 'Monday', TUE = 'Tue', WED = 'Wed', THU = 'Thu', FRI = 'Fri', SAT = 'Sat'
 }
 enum DaysOfWeek2 {
   SUN, MON, TUE, WED, THU, FRI, SAT
+}
+
+interface LoginLog {
+  id: string;
+  timestamp: number;
 }
 
 @Component({
@@ -29,11 +34,13 @@ export class AppComponent implements OnInit {
   public groupForm: NaoFormGroup;
   public mixedGroup: NaoFormGroup;
   touchedValues: String[];
+  testForm: NaoFormGroup;
+
 
 
   constructor( private fb: NaoFormBuilder) {
     this.userForm = new NaoFormGroup({
-      name: new NaoFormControl('1',{ validators: [ NaoValidators.inObject(this.obj2, 'small.b.c') ]} ),
+      name: new NaoFormControl('1', { validators: [ NaoValidators.inObject(this.obj2, 'small.b.c') ]} ),
       email: new FormControl(1, NaoValidators.inEnumKey(DaysOfWeek2)),
       name2: new FormControl('Monday', NaoValidators.inEnum(DaysOfWeek)),
       ssn: new FormControl('', NaoValidators.isSSN()),
@@ -41,8 +48,6 @@ export class AppComponent implements OnInit {
       phone: new FormControl('123 445 6789', NaoValidators.isUSPhone()),
       size: new FormControl(null),
     });
-    
-  
     this.groupForm = this.fb.group({
       name_grp: 'tiger',
       weight: 80,
@@ -60,14 +65,27 @@ export class AppComponent implements OnInit {
       groupForm: this.groupForm
     });
 
-    this.touchedValues = this.mixedGroup.getValuesTouched(this.mixedGroup,[]);
+    this.testForm = new NaoFormGroup({
+      name: new NaoFormControl(),
+      loginLog: new NaoFormArray([
+        new NaoFormGroup({
+          id: new NaoFormControl('1'),
+          timestamp: new NaoFormControl(872634782348)
+        }),
+        new NaoFormGroup({
+          id: new NaoFormControl('2'),
+          timestamp: new NaoFormControl(872634782348)
+        }),
+        new NaoFormGroup({
+          id: new NaoFormControl('3'),
+          timestamp: new NaoFormControl(872634782348)
+        })
+      ])
+   });
 
   }
 
   ngOnInit() {
-    console.log(this.groupForm.controls.animals.value);
-
-
     this.groupForm.valueChanges.subscribe(console.log);
     this.send();
   }
@@ -115,8 +133,7 @@ export class AppComponent implements OnInit {
     console.log(this.groupForm.value);
   }
   reset() {
-    
-    this.userForm.reset();
+     this.userForm.reset();
   }
 
   resetMixed() {
@@ -133,7 +150,6 @@ export class AppComponent implements OnInit {
   }
   markAllDirty(){
     this.mixedGroup.markAllAsDirty();
-    this.touchedValues = this.mixedGroup.getValuesTouched(this.mixedGroup,[]);
   }
   markAllUntouched(){
     this.mixedGroup.markAllAsUntouched();

@@ -177,4 +177,12 @@ export class NaoFormArray<T = any> extends FormArray {
       return null;
     }
   }
+
+  /**
+   * Resets the FormArray and all descendants are marked pristine and untouched, and the value of all descendants to null or null maps.
+   */
+  public empty(options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void {
+  this.controls = [];
+  return super.reset( [], options );
+  }
 }

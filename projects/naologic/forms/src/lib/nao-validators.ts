@@ -2,6 +2,36 @@ import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angu
 import { get, isPlainObject} from 'lodash';
 
 export class NaoValidators {
+ /**
+   * Validator to check if control value is only a number
+   */
+  public static onlyNumeric(): ValidatorFn {
+    const fn = (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine || control.value === null || !isNaN(+control.value)) {
+        return null;
+      }
+      control.markAsTouched();
+      return { onlyNumeric: false, actualValue: control.value };
+  };
+    return fn;
+  }
+
+  /**
+   * Validator to check form control contains ONLY contain alphanumeric characters and underscores ("_")
+   */
+  public static onlyAlphanumeric(): ValidatorFn {
+    const fn = (control: AbstractControl): ValidationErrors | null => {
+      if (control.pristine || control.value === null || typeof control.value !== 'string' ) {
+        return null;
+      }
+      control.markAsTouched();
+      // --> Define pattern
+      const alphaNumericPattern = /^[A-Za-z0-9_]+$/;
+      // --> Check if value matches the pattern
+      return alphaNumericPattern.test(control.value) ? null : { onlyAlphanumeric: false, actualValue: control.value };
+      };
+    return fn;
+  }
   /**
    * Validator that requires controls to have a value greater than a number.
    */
@@ -356,7 +386,7 @@ export class NaoValidators {
    */
   static solveSome(...conditions: any[]): ValidatorFn {
     const fn = (group: FormGroup): ValidationErrors | null => {
-      if(group.pristine){
+      if (group.pristine) {
         return null;
       }
       group.markAsTouched();
@@ -398,7 +428,7 @@ export class NaoValidators {
    */
   static solveNone(...conditions: any[]): ValidatorFn {
    const fn =  (group: FormGroup): ValidationErrors | null => {
-      if(group.pristine){
+      if (group.pristine) {
         return null;
       }
       group.markAsTouched();
@@ -440,7 +470,7 @@ export class NaoValidators {
    */
   static solveAll(...conditions: any[]): ValidatorFn {
     const fn = (group: FormGroup): ValidationErrors | null => {
-      if(group.pristine){
+      if (group.pristine) {
         return null;
       }
       group.markAsTouched();

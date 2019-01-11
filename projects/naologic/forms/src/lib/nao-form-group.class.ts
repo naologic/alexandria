@@ -5,6 +5,8 @@ import { callNativeMarkAsFunction, getValuesByMarkedAs, NaoFormStatic } from './
 import { NaoFormArray } from './nao-form-array.class';
 import { NaoFormOptions } from './nao-form-options';
 import { NaoAbstractControlOptions } from './nao-form.interface';
+import { NaoFormControl } from './nao-form-control.class';
+
 
 
 export class NaoFormGroup<T = any> extends FormGroup {
@@ -238,6 +240,70 @@ export class NaoFormGroup<T = any> extends FormGroup {
   public getAllErrorsFlat(path = '') {
     return NaoFormStatic.getAllErrorsFlat(this);
   }
+
+  /**
+   * Retrieves a child control given the control's name or path from a formGroup typecasted as NaoFormArray
+   */
+  public getAsNaoFormArray(path: Array<string | number> | string): NaoFormArray | null {
+    const getValue = super.get(path);
+    if (getValue && (getValue instanceof NaoFormArray)) {
+      return getValue as NaoFormArray;
+    }
+    return null;
+  }
+ /**
+   *  Retrieves a child control given the control's name or path from a formGroup typecasted as as NaoFormControl
+   */
+  public getAsNaoFormControl(path: Array<string | number> | string): NaoFormControl | null {
+    const getValue = super.get(path);
+    if (getValue && (getValue instanceof NaoFormControl)) {
+      return getValue as NaoFormControl;
+    }
+    return null;
+  }
+
+  /**
+   *  Retrieves a child control given the control's name or path from a formGroup typecasted as as NaoFormGroup
+   */
+  public getAsNaoFormGroup(path: Array<string | number> | string): NaoFormGroup | null {
+    const getValue = super.get(path);
+    if (getValue && (getValue instanceof NaoFormGroup)) {
+      return getValue as NaoFormGroup;
+    }
+    return null;
+  }
+
+  /**
+   * Retrieves a child control from a formGroup and returns only the value, not the entire object
+   */
+  public getValueFrom(path: Array<string | number> | string): Partial<T> {
+    const getValue = super.get(path);
+    if (getValue) {
+      return getValue.value;
+    }
+    return null;
+  }
+
+   /**
+   * Retrieves a child control from a formGroup and returns only the value, typecasted
+   */
+  public getValueFromAs<A>(path: Array<string | number> | string): Partial<A> | null {
+    const getValueFrom = this.getValueFrom(path);
+    if (getValueFrom) {
+      return getValueFrom as A;
+    }
+    return null;
+  }
+
+  /**
+   * Resets the FormGroup, marks all descendants are marked pristine and untouched, and the value of all descendants to null.
+   */
+  public empty(options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void {
+    return super.reset( {}, options );
+  }
 }
+
+
+
 
 
