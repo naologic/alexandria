@@ -298,8 +298,8 @@ export class NaoFormGroup<T = any> extends FormGroup {
   /**
    * Resets the FormGroup, marks all descendants are marked pristine and untouched, and the value of all descendants to null.
    */
-  empty(value: any = {}, options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void {
-    return super.reset( value, options );
+  public empty(options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void {
+    return super.reset( {}, options );
   }
 }
 
