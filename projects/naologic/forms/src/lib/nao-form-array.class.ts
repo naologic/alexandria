@@ -181,8 +181,8 @@ export class NaoFormArray<T = any> extends FormArray {
   /**
    * Resets the FormArray and all descendants are marked pristine and untouched, and the value of all descendants to null or null maps.
    */
-  empty(value: any = [], options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void {
+  empty(options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void {
   this.controls = [];
-  return super.reset( value, options );
+  return super.reset( [], options );
   }
 }
