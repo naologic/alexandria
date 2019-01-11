@@ -166,6 +166,17 @@ export class NaoFormArray<T = any> extends FormArray {
   public getAllErrorsFlat(path = '') {
     return NaoFormStatic.getAllErrorsFlat(this);
   }
+  
+   /**
+   * Retrieves a child control from a NaoFormArray and returns only the value, not the entire object
+   */
+  public getValueFrom<A = any>(path: number): A {
+    const getValue = super.at(path);
+    if (getValue instanceof AbstractControl) {
+      return getValue.getValue() as A;
+    }
+    return null;
+  }
 
   /**
    * Get last item
