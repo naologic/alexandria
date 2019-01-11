@@ -276,21 +276,10 @@ export class NaoFormGroup<T = any> extends FormGroup {
   /**
    * Retrieves a child control from a formGroup and returns only the value, not the entire object
    */
-  public getValueFrom(path: Array<string | number> | string): Partial<T> {
+  public getValueFrom<A = any>(path: Array<string | number> | string): A {
     const getValue = super.get(path);
     if (getValue) {
-      return getValue.value;
-    }
-    return null;
-  }
-
-   /**
-   * Retrieves a child control from a formGroup and returns only the value, typecasted
-   */
-  public getValueFromAs<A>(path: Array<string | number> | string): Partial<A> | null {
-    const getValueFrom = this.getValueFrom(path);
-    if (getValueFrom) {
-      return getValueFrom as A;
+      return getValue.value as A;
     }
     return null;
   }
