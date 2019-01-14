@@ -1916,6 +1916,45 @@ _Resets the FormArray and all descendants are marked pristine and untouched, and
    // --> 0
     
 ```
+
+
+# NaoFormControl
+***
+
+_Import NaoFormControl to your component_
+
+```typescript 
+import { NaoFormControl } from '@naologic/forms'
+```
+
+##### Available Methods
+*   `empty()`
+
+
+## **empty()**
+
+`empty()`
+_Resets the form control, marking it pristine and untouched, and setting the value to null._
+
+
+##### Arguments
+
+* `options `_`Object`Configuration options that determine how the control propagates changes and emits events events after markin is applied_ 
+ `onlySelf` _When true, mark only this control. When false or not supplied, marks all direct ancestors. Default is false._
+ `emitEvent`_When true or not supplied (the default), both the statusChanges and valueChanges observables emit events with the latest status and value when the control is reset. When false, no events are emitted_  
+
+
+
+#### Example
+```typescript
+    const control = new NaoFormControl('some value');
+    console.log(control.value);    
+    //  --> 'some value'
+  control.empty();
+   console.log(control.value);
+   // --> null
+    
+```
 ***
 
 
