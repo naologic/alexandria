@@ -1464,17 +1464,16 @@ _Get form values ._
 
 #### Example
 ```typescript
-     public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
 
-
-  const formValues = this.formArray.getValue();
-  console.log(formValues);
-   // --> ["first", "second"]
+const formValues = this.formArray.getValue();
+console.log(formValues);
+ // --> ["first", "second"]
   
 ```
 
@@ -1493,17 +1492,17 @@ _Get forma array values by index_
 
 #### Example
 ```typescript
-     public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
 
 
-  const formValue = this.formArray.getValues(1);
-  console.log(formValue);
-   // --> ["second"]
+const formValue = this.formArray.getValues(1);
+console.log(formValue);
+// --> ["second"]
   
 ```
 
@@ -1523,16 +1522,15 @@ _Retrieves a child control from a formGroup and returns only the value, not the 
 
 #### Example
 ```typescript
-    public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
 
- 
-    console.log(this.formArray.getValueFrom(1);
-  // --> 'second'
+console.log(this.formArray.getValueFrom(1);
+// --> 'second'
 ```
 
 
@@ -1635,18 +1633,18 @@ _Get only the values of controls marked as `touched`_
 
 #### Example
 ```typescript
-    public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.naoFormGroup = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
+this.naoFormGroup = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
       
-    this.formArray.controls[0].markAsTouched();
+this.formArray.controls[0].markAsTouched();
 
-   const touchedValues = this.formArray.getTouchedValues();
-   console.log(touchedValues);
-   // --> ["first"]
+const touchedValues = this.formArray.getTouchedValues();
+console.log(touchedValues);
+// --> ["first"]
 ```
 
 ## **getUntouchedValues()**
@@ -1660,17 +1658,17 @@ _Get only the values of controls marked as `untouched`_
 
 #### Example
 ```typescript
-    public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
-    this.formArray.controls[1].markAsTouched();
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
+this.formArray.controls[1].markAsTouched();
 
-   const untouchedValues = this.formArray.getUntouchedValues();
-   console.log(untouchedValues);
-     // --> ["first"]
+const untouchedValues = this.formArray.getUntouchedValues();
+console.log(untouchedValues);
+// --> ["first"]
 ```
 
 ## **getDirtyValues()**
@@ -1684,17 +1682,17 @@ _Get only the values of controls marked as `dirty`_
 
 #### Example
 ```typescript
-    public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
-    this.formArray.controls[1].markAsDirty();
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
+this.formArray.controls[1].markAsDirty();
 
-   const dirtyValues = this.formArray.getDirtyValues();
-   console.log(dirtyValues);
-     // --> ["second"]
+const dirtyValues = this.formArray.getDirtyValues();
+console.log(dirtyValues);
+// --> ["second"]
 ```
 
 ## **getPristineValues()**
@@ -1708,17 +1706,17 @@ _Get only the values of controls marked as `pristine`_
 
 #### Example
 ```typescript
-    public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
-    this.formArray.controls[1].markAsDirty();
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
+this.formArray.controls[1].markAsDirty();
 
-   const pristineValues = this.formArray.getPristineValues();
-   console.log(pristineValues);
-   // --> ["first"]
+const pristineValues = this.formArray.getPristineValues();
+console.log(pristineValues);
+// --> ["first"]
 ```
 
 ## **getPendingValues()**
@@ -1732,16 +1730,16 @@ _Get only the values of controls marked as `pending`_
 
 #### Example
 ```typescript
-   public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
-    this.formArray.controls[1].markAsPending();
-   const pendingValues = this.formArray.getPendingValues();
-   console.log(pendingValues);
-   // --> ["second"]
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
+this.formArray.controls[1].markAsPending();
+const pendingValues = this.formArray.getPendingValues();
+console.log(pendingValues);
+// --> ["second"]
 ```
 
 ## **markAllAsTouched()**
@@ -1759,17 +1757,17 @@ _Iterates through all the children of the NaoFormArray and calls markAsTouched o
 
 #### Example
 ```typescript
-    public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
 
-   this.formArray.markAllAsTouched();
-  const touchedValues = this.formArray.getTouchedValues();
-  console.log(touchedValues);
-  // --> ["first", "second"]
+this.formArray.markAllAsTouched();
+const touchedValues = this.formArray.getTouchedValues();
+console.log(touchedValues);
+// --> ["first", "second"]
     
 ```
 
@@ -1788,19 +1786,19 @@ _Iterates through all the children of the NaoFormGroup and calls markAsUntouched
 
 #### Example
 ```typescript
-    public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
 
- this.formArray.markAllAsTouched();
-  console.log(this.formArray.touched);
-  // --> true
-  this.formArray.markAllAsUntouched();
-  console.log(this.formArray.touched);
-   // --> false
+this.formArray.markAllAsTouched();
+console.log(this.formArray.touched);
+// --> true
+this.formArray.markAllAsUntouched();
+console.log(this.formArray.touched);
+ // --> false
 ```
 
 ## **markAllAsDirty()**
@@ -1817,19 +1815,19 @@ _Iterates through all the children of the NaoFormGroup and calls markAsDirty on 
 
 #### Example
 ```typescript
-    public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
+this.formArray = new NaoFormArray([
+new NaoFormControl('first'),
+new NaoFormControl('second')
+]);
 
- this.formArray.markAllAsPristine();
-  console.log(this.formArray.dirty);
-  // --> false
-  this.formArray.markAllAsDirty();
-  console.log(this.formArray.dirty);
-   // --> true
+this.formArray.markAllAsPristine();
+console.log(this.formArray.dirty);
+// --> false
+this.formArray.markAllAsDirty();
+console.log(this.formArray.dirty);
+// --> true
 ```
 
 ## **markAllAsPristine()**
@@ -1846,19 +1844,19 @@ _Iterates through all the children of the NaoFormGroup and calls markAsPristine 
 
 #### Example
 ```typescript
-    public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
 
- this.formArray.markAllAsDirty();
-  console.log(this.formArray.dirty);
-  // --> true
-  this.formArray.markAllAsPristine();
-  console.log(this.formArray.pristine);
-   // --> true
+this.formArray.markAllAsDirty();
+console.log(this.formArray.dirty);
+// --> true
+this.formArray.markAllAsPristine();
+console.log(this.formArray.pristine);
+ // --> true
 ```
 
 ## **markAllAsPending()**
@@ -1875,16 +1873,16 @@ _Iterates through all the children of the NaoFormGroup and calls markAsPending o
 
 #### Example
 ```typescript
-    public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
 
- this.formArray.markAllAsPending();
-  console.log(this.formArray.pending);
-  // --> true
+this.formArray.markAllAsPending();
+console.log(this.formArray.pending);
+// --> true
 ```
 
 ## **empty()**
@@ -1903,17 +1901,17 @@ _Resets the FormArray and all descendants are marked pristine and untouched, and
 
 #### Example
 ```typescript
-     public formArray: NaoFormArray;
+public formArray: NaoFormArray;
 
-    this.formArray = new NaoFormArray([
-    new NaoFormControl('first'),
-    new NaoFormControl('second')
-  ]);
+this.formArray = new NaoFormArray([
+  new NaoFormControl('first'),
+  new NaoFormControl('second')
+]);
 
 
-  this.formArray.empty();
-   console.log(this.formArray.controls.length);
-   // --> 0
+this.formArray.empty();
+console.log(this.formArray.controls.length);
+// --> 0
     
 ```
 
@@ -1947,12 +1945,12 @@ _Resets the form control, marking it pristine and untouched, and setting the val
 
 #### Example
 ```typescript
-    const control = new NaoFormControl('some value');
-    console.log(control.value);    
-    //  --> 'some value'
+  const control = new NaoFormControl('some value');
+  console.log(control.value);    
+  //  --> 'some value'
   control.empty();
-   console.log(control.value);
-   // --> null
+  console.log(control.value);
+  // --> null
     
 ```
 ***
