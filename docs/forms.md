@@ -553,7 +553,7 @@ import { NaoFormGroup } from '@naologic/forms'
 *   `getUntouchedValues()`
 *   `getDirtyValues()`
 *   `getPristineValues()`
-*   `getPendingValuess()`
+*   `getPendingValues()`
 *   `disable()`
 *   `patchDeep()`
 *   `validate()`
@@ -1434,17 +1434,108 @@ import { NaoFormArray } from '@naologic/forms'
 
 ##### Available Methods
 
+*   `getValue()`
+*   `getValues()`
+*   `getValueFrom()`
 *   `getLast()`
 *   `getAllErrors()`
 *   `getAllErrorsFlat()`
-*   `getAllErrorsFlat()`
-
-*   `getAllErrorsFlat()`
-
-*   `getAllErrorsFlat()`
-
+*   `getTouchedValues()`
+*   `getUntouchedValues()`
+*   `getDirtyValues()`
+*   `getPristineValues()`
+*   `getPendingValues()`
+*   `markAllAsTouched()`
+*   `markAllAsUntouched()`
+*   `markAllAsDirty()`
+*   `markAllAsPristine()`
+*   `markAllAsPending()`
+*   `empty()`
 
 ***
+## **getValue()**
+
+`getValue()`
+_Get form values ._
+
+##### Returns
+
+*  _Array_
+
+#### Example
+```typescript
+     public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+
+
+  const formValues = this.formArray.getValue();
+  console.log(formValues);
+   // --> ["first", "second"]
+  
+```
+
+## **getValues()**
+
+`getValues(indexes)`
+_Get forma array values by index_
+
+##### Arguments
+
+* `indexes(`_`number`_`)`  
+
+##### Returns
+
+*  _Array_
+
+#### Example
+```typescript
+     public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+
+
+  const formValue = this.formArray.getValues(1);
+  console.log(formValue);
+   // --> ["second"]
+  
+```
+
+## **getValueFrom()**
+
+`getValueFrom()`
+_Retrieves a child control from a formGroup and returns only the value, not the entire object. The return data can be typecasted_
+
+
+##### Arguments
+
+* `path: number`  
+
+##### Returns
+
+*  _String | Array | Object_
+
+#### Example
+```typescript
+    public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+
+ 
+    console.log(this.formArray.getValueFrom(1);
+  // --> 'second'
+```
+
+
 
 ## **getLast()**
 
@@ -1531,6 +1622,299 @@ _Get all errors from this form_
     
    console.log(this.naoFormArray.getAllErrors());
    // --> [{ 0: { ssn: {ok: false, isSSN: false, actualValue: "000 00 0000"}} }]
+```
+
+## **getTouchedValues()**
+
+`getTouchedValues()`
+_Get only the values of controls marked as `touched`_
+
+##### Returns
+
+*  _Array_
+
+#### Example
+```typescript
+    public formArray: NaoFormArray;
+
+    this.naoFormGroup = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+      
+    this.formArray.controls[0].markAsTouched();
+
+   const touchedValues = this.formArray.getTouchedValues();
+   console.log(touchedValues);
+   // --> ["first"]
+```
+
+## **getUntouchedValues()**
+
+`getUntouchedValues()`
+_Get only the values of controls marked as `untouched`_
+
+##### Returns
+
+*  _Array_
+
+#### Example
+```typescript
+    public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+    this.formArray.controls[1].markAsTouched();
+
+   const untouchedValues = this.formArray.getUntouchedValues();
+   console.log(untouchedValues);
+     // --> ["first"]
+```
+
+## **getDirtyValues()**
+
+`getDirtyValues()`
+_Get only the values of controls marked as `dirty`_
+
+##### Returns
+
+*  _Array_
+
+#### Example
+```typescript
+    public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+    this.formArray.controls[1].markAsDirty();
+
+   const dirtyValues = this.formArray.getDirtyValues();
+   console.log(dirtyValues);
+     // --> ["second"]
+```
+
+## **getPristineValues()**
+
+`getPristineValues()`
+_Get only the values of controls marked as `pristine`_
+
+##### Returns
+
+*  _Array_
+
+#### Example
+```typescript
+    public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+    this.formArray.controls[1].markAsDirty();
+
+   const pristineValues = this.formArray.getPristineValues();
+   console.log(pristineValues);
+   // --> ["first"]
+```
+
+## **getPendingValues()**
+
+`getPendingValues()`
+_Get only the values of controls marked as `pending`_
+
+##### Returns
+
+*  _Array_
+
+#### Example
+```typescript
+   public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+    this.formArray.controls[1].markAsPending();
+   const pendingValues = this.formArray.getPendingValues();
+   console.log(pendingValues);
+   // --> ["second"]
+```
+
+## **markAllAsTouched()**
+
+`markAllAsTouched()`
+_Iterates through all the children of the NaoFormArray and calls markAsTouched on all controls.  A control is touched by focus and blur events that do not change the value._
+
+
+##### Arguments
+
+* `opts `_`Object`Configuration options that determine how the control propagates changes and emits events events after markin is applied_ 
+ `onlySelf` _When true, mark only this control. When false or not supplied, marks all direct ancestors. Default is false._  
+
+
+
+#### Example
+```typescript
+    public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+
+   this.formArray.markAllAsTouched();
+  const touchedValues = this.formArray.getTouchedValues();
+  console.log(touchedValues);
+  // --> ["first", "second"]
+    
+```
+
+## **markAllAsUntouched()**
+
+`markAllAsUntouched()`
+_Iterates through all the children of the NaoFormGroup and calls markAsUntouched on all controls. If the control has any children, also marks all children as untouched and recalculates the touched status of all parent controls._
+
+
+##### Arguments
+
+* `opts `_`Object`Configuration options that determine how the control propagates changes and emits events events after markin is applied_ 
+ `onlySelf` _When true, mark only this control. When false or not supplied, marks all direct ancestors. Default is false._  
+
+
+
+#### Example
+```typescript
+    public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+
+ this.formArray.markAllAsTouched();
+  console.log(this.formArray.touched);
+  // --> true
+  this.formArray.markAllAsUntouched();
+  console.log(this.formArray.touched);
+   // --> false
+```
+
+## **markAllAsDirty()**
+
+`markAllAsDirty()`
+_Iterates through all the children of the NaoFormGroup and calls markAsDirty on all controls.  Marks the control as dirty. A control becomes dirty when the control's value is changed through the UI; compare markAsTouched._
+
+##### Arguments
+
+* `opts `_`Object`Configuration options that determine how the control propagates changes and emits events events after markin is applied_ 
+ `onlySelf` _When true, mark only this control. When false or not supplied, marks all direct ancestors. Default is false._  
+
+
+
+#### Example
+```typescript
+    public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+
+ this.formArray.markAllAsPristine();
+  console.log(this.formArray.dirty);
+  // --> false
+  this.formArray.markAllAsDirty();
+  console.log(this.formArray.dirty);
+   // --> true
+```
+
+## **markAllAsPristine()**
+
+`markAllAsPristine()`
+_Iterates through all the children of the NaoFormGroup and calls markAsPristine on all controls. If the control has any children, marks all children as pristine, and recalculates the pristine status of all parent controls._
+
+##### Arguments
+
+* `opts `_`Object`Configuration options that determine how the control propagates changes and emits events events after markin is applied_ 
+ `onlySelf` _When true, mark only this control. When false or not supplied, marks all direct ancestors. Default is false._  
+
+
+
+#### Example
+```typescript
+    public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+
+ this.formArray.markAllAsDirty();
+  console.log(this.formArray.dirty);
+  // --> true
+  this.formArray.markAllAsPristine();
+  console.log(this.formArray.pristine);
+   // --> true
+```
+
+## **markAllAsPending()**
+
+`markAllAsPending()`
+_Iterates through all the children of the NaoFormGroup and calls markAsPending on all controls.  A control is pending while the control performs async validation._
+
+##### Arguments
+
+* `opts `_`Object`Configuration options that determine how the control propagates changes and emits events events after markin is applied_ 
+ `onlySelf` _When true, mark only this control. When false or not supplied, marks all direct ancestors. Default is false._  
+
+
+
+#### Example
+```typescript
+    public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+
+ this.formArray.markAllAsPending();
+  console.log(this.formArray.pending);
+  // --> true
+```
+
+## **empty()**
+
+`empty()`
+_Resets the FormArray and all descendants are marked pristine and untouched, and the value of all descendants to null or null maps._
+
+
+##### Arguments
+
+* `options `_`Object`Configuration options that determine how the control propagates changes and emits events events after markin is applied_ 
+ `onlySelf` _When true, mark only this control. When false or not supplied, marks all direct ancestors. Default is false._
+ `emitEvent`_When true or not supplied (the default), both the statusChanges and valueChanges observables emit events with the latest status and value when the control is reset. When false, no events are emitted_  
+
+
+
+#### Example
+```typescript
+     public formArray: NaoFormArray;
+
+    this.formArray = new NaoFormArray([
+    new NaoFormControl('first'),
+    new NaoFormControl('second')
+  ]);
+
+
+  this.formArray.empty();
+   console.log(this.formArray.controls.length);
+   // --> 0
+    
 ```
 ***
 
