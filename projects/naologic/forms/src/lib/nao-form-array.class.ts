@@ -173,7 +173,7 @@ export class NaoFormArray<T = any> extends FormArray {
   public getValueFrom<A = any>(path: number): A {
     const getValue = super.at(path);
     if (getValue instanceof AbstractControl) {
-      return getValue.getValue() as A;
+      return getValue.value as A;
     }
     return null;
   }
