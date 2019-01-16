@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, AbstractControl, Validators } from '@angular/forms';
-import { NaoValidators,NaoFormGroup, NaoFormBuilder, NaoFormControl, NaoFormArray } from '@naologic/forms';
+import { NaoValidators, NaoFormGroup, NaoFormBuilder, NaoFormControl, NaoFormArray } from '@naologic/forms';
 import { mapValues } from 'lodash';
 
 enum DaysOfWeek {
@@ -101,7 +101,8 @@ export class AppComponent implements OnInit {
  this.checkErrors();
   }
   checkErrors() {
-    console.log('control hasErrors: ', this.naoFormGroup.controls.firstName.hasErrors());
+    const firstNameControl = this.naoFormGroup.getAsNaoFormControl('firstName');
+    console.log('control hasErrors: ', firstNameControl.hasErrors());
    console.log('naoFomGroup hasErrors: ', this.naoFormGroup.hasErrors());
   }
   nameChanged() {
@@ -165,13 +166,13 @@ export class AppComponent implements OnInit {
     });
     this.animals.push(animal);
   }
-  markAllDirty(){
+  markAllDirty() {
     this.mixedGroup.markAllAsDirty();
   }
-  markAllUntouched(){
+  markAllUntouched() {
     this.mixedGroup.markAllAsUntouched();
   }
-  markAllPristine(){
+  markAllPristine() {
     this.mixedGroup.markAllAsPristine();
   }
   deleteAnimal(index) {
