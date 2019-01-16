@@ -85,12 +85,24 @@ export class AppComponent implements OnInit {
         })
       ])
    });
+   this.naoFormGroup = new NaoFormGroup({
+    firstName: new NaoFormControl('John', Validators.minLength(7)),
+    lastName: new NaoFormControl('Doe'),
+    // -->  'ssn' Form control with invalid value
+    ssn: new NaoFormControl('000 00 0000', NaoValidators.isSSN()),
+  });
+
 
   }
 
   ngOnInit() {
  this.groupForm.valueChanges.subscribe(console.log);
  this.send();
+ this.checkErrors();
+  }
+  checkErrors() {
+    console.log('control hasErrors: ', this.naoFormGroup.controls.firstName.hasErrors());
+   console.log('naoFomGroup hasErrors: ', this.naoFormGroup.hasErrors());
   }
   nameChanged() {
     console.log('has errors :', this.mixedGroup.hasErrors());
