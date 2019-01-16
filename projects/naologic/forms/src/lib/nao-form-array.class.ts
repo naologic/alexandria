@@ -160,6 +160,13 @@ export class NaoFormArray<T = any> extends FormArray {
     return NaoFormStatic.getAllErrors(this);
   }
 
+  public hasErrors(): boolean {
+    if ( this.getAllErrors() !== null ) {
+      return true;
+    }
+    return false;
+  }
+
   /**
    * List the errors in a flat map
    */

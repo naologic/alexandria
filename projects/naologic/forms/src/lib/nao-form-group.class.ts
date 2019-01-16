@@ -234,6 +234,12 @@ export class NaoFormGroup<T = any> extends FormGroup {
     return NaoFormStatic.getAllErrors(this);
   }
 
+  public hasErrors(): boolean {
+    if ( this.getAllErrors() !== null)  {
+      return true;
+    }
+    return false;
+  }
   /**
    * List the errors in a flat map
    */
