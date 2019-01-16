@@ -1,11 +1,11 @@
-import {NgForm} from '@angular/forms';
+import {Directive} from '@angular/core';
 
-export class NaoForm extends NgForm {
-  constructor(
-    validators: any[],
-    asyncValidators: any[]
-  ) {
-    super(validators, asyncValidators);
-  }
+@Directive({
+  selector: 'nao-form',
+  exportAs: 'naoForm'
+})
+export class NaoForm {
+  constructor() {}
+  // todo: think about it
 
 }

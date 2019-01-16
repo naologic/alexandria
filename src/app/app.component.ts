@@ -48,11 +48,11 @@ export class AppComponent implements OnInit {
       phone: new FormControl('123 445 6789', NaoValidators.isUSPhone()),
       size: new FormControl(null),
     });
-    this.groupForm = this.fb.group({
+    this.groupForm = this.fb.naoGroup({
       name_grp: 'tiger',
       weight: 80,
       animals: this.fb.array([
-        this.fb.group({
+        this.fb.naoGroup({
           type: null,
           weight: null
         })
@@ -142,7 +142,7 @@ export class AppComponent implements OnInit {
   }
 
   addNewAnimal() {
-    const animal = this.fb.group({
+    const animal = this.fb.naoGroup({
       type: '',
       weight: ''
     });

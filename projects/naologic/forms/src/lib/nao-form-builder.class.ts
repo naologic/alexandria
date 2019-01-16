@@ -7,12 +7,15 @@ import { NaoFormArray } from './nao-form-array.class';
 
 
 export class NaoFormBuilder extends FormBuilder {
-  
   constructor() {
     super();
   }
   public group(controlsConfig: { [key: string]: any }, extra?: NaoFormOptions): NaoFormGroup {
-    return super.group(controlsConfig,extra) as NaoFormGroup;
+    return super.group(controlsConfig, extra) as NaoFormGroup;
+  }
+
+  public naoGroup(controlsConfig: { [key: string]: any }, extra?: NaoFormOptions): NaoFormGroup {
+    return super.group(controlsConfig, extra) as NaoFormGroup;
   }
 
   public naoArray(controlsConfig: any[], extra?: NaoFormOptions): NaoFormArray {
