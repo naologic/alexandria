@@ -155,7 +155,7 @@ const getValuesByMarkedAs = (control: AbstractControl, type: 'touched'|'untouche
   const res = {ok: false, value: null, type};
 
   // -->Check: if the `markAs` property is as expected
-  if (control && control.hasOwnProperty(type) && control[type]) {
+  if (control) {
     res.ok = true;
     if (control instanceof FormGroup || control instanceof NaoFormGroup) {
       // -->Init: the value by type
@@ -187,7 +187,11 @@ const getValuesByMarkedAs = (control: AbstractControl, type: 'touched'|'untouche
         throw Error(`I received a form array with no controls index. This is not normal`);
       }
     } else if (control instanceof FormControl || control instanceof NaoFormControl) {
-      res.value = control.value;
+      if (control[type]) {
+        res.value = control.value;
+      } else {
+        res.ok = false;
+      }
     } else {
       throw Error(`Invalid instance type made it's way into NaoFromGroup getTouchedValues! ${typeof control}`);
     }
