@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, AbstractControl } from '@angular/forms';
-import { NaoValidators,NaoFormGroup, NaoFormBuilder, NaoFormControl, NaoFormArray } from '@naologic/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, AbstractControl, Validators } from '@angular/forms';
+import { NaoValidators, NaoFormGroup, NaoFormBuilder, NaoFormControl, NaoFormArray } from '@naologic/forms';
+import { mapValues } from 'lodash';
 
 enum DaysOfWeek {
   SUN = '1', MON = 'Monday', TUE = 'Tue', WED = 'Wed', THU = 'Thu', FRI = 'Fri', SAT = 'Sat'
@@ -34,13 +35,15 @@ export class AppComponent implements OnInit {
   public groupForm: NaoFormGroup;
   public mixedGroup: NaoFormGroup;
   touchedValues: String[];
-  testForm: NaoFormGroup;
+  public testForm: NaoFormGroup;
+  public naoFormGroup: NaoFormGroup;
+  public formArray: NaoFormArray;
 
 
 
   constructor( private fb: NaoFormBuilder) {
     this.userForm = new NaoFormGroup({
-      name: new NaoFormControl('1', { validators: [ NaoValidators.inObject(this.obj2, 'small.b.c') ]} ),
+      name: new NaoFormControl('1', { validators: [ NaoValidators.minLength(5), NaoValidators.inObject(this.obj2, 'small.b.c') ]} ),
       email: new FormControl(1, NaoValidators.inEnumKey(DaysOfWeek2)),
       name2: new FormControl('Monday', NaoValidators.inEnum(DaysOfWeek)),
       ssn: new FormControl('', NaoValidators.isSSN()),
@@ -70,7 +73,7 @@ export class AppComponent implements OnInit {
       loginLog: new NaoFormArray([
         new NaoFormGroup({
           id: new NaoFormControl('1'),
-          timestamp: new NaoFormControl(872634782348)
+          timestamp: new NaoFormControl('872634782348', NaoValidators.minLength(5))
         }),
         new NaoFormGroup({
           id: new NaoFormControl('2'),
@@ -82,14 +85,29 @@ export class AppComponent implements OnInit {
         })
       ])
    });
+   this.naoFormGroup = new NaoFormGroup({
+    firstName: new NaoFormControl('John', Validators.minLength(7)),
+    lastName: new NaoFormControl('Doe'),
+    // -->  'ssn' Form control with invalid value
+    ssn: new NaoFormControl('000 00 0000', NaoValidators.isSSN()),
+  });
+
 
   }
 
   ngOnInit() {
-    this.groupForm.valueChanges.subscribe(console.log);
-    this.send();
+ this.groupForm.valueChanges.subscribe(console.log);
+ this.send();
+ this.checkErrors();
   }
-
+  checkErrors() {
+    const firstNameControl = this.naoFormGroup.getAsNaoFormControl('firstName');
+    console.log('control hasErrors: ', firstNameControl.hasErrors());
+   console.log('naoFomGroup hasErrors: ', this.naoFormGroup.hasErrors());
+  }
+  nameChanged() {
+    console.log('has errors :', this.mixedGroup.hasErrors());
+  }
   get name() {
     return this.userForm.get('name') as FormControl;
   }
@@ -148,13 +166,13 @@ export class AppComponent implements OnInit {
     });
     this.animals.push(animal);
   }
-  markAllDirty(){
+  markAllDirty() {
     this.mixedGroup.markAllAsDirty();
   }
-  markAllUntouched(){
+  markAllUntouched() {
     this.mixedGroup.markAllAsUntouched();
   }
-  markAllPristine(){
+  markAllPristine() {
     this.mixedGroup.markAllAsPristine();
   }
   deleteAnimal(index) {
