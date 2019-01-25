@@ -2,6 +2,23 @@ import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angu
 import { get, isPlainObject} from 'lodash';
 
 export class NaoValidators {
+  /**
+   * Validator to check passwords
+   */
+
+
+  public static checkPasswords(): ValidatorFn {
+    const fn = ( control: FormGroup ): ValidationErrors | null => {
+    const pass = control.get('password').value;
+    const confirmPass = control.get('confirm_password').value;
+    if ( pass === confirmPass ) {
+      return null;
+    }
+    control.markAsTouched();
+    return { notSame: true, actualValue: { pass, confirmPass } };
+  };
+  return fn;
+ }
  /**
    * Validator to check if control value is only a number
    */

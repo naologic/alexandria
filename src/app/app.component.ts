@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, AbstractControl } from '@angular/forms';
-import { NaoValidators,NaoFormGroup, NaoFormBuilder, NaoFormControl, NaoFormArray } from '@naologic/forms';
+import { NaoValidators, NaoFormGroup, NaoFormBuilder, NaoFormControl, NaoFormArray } from '@naologic/forms';
 
 enum DaysOfWeek {
   SUN = '1', MON = 'Monday', TUE = 'Tue', WED = 'Wed', THU = 'Thu', FRI = 'Fri', SAT = 'Sat'
@@ -41,13 +41,15 @@ export class AppComponent implements OnInit {
   constructor( private fb: NaoFormBuilder) {
     this.userForm = new NaoFormGroup({
       name: new NaoFormControl('1', { validators: [ NaoValidators.inObject(this.obj2, 'small.b.c') ]} ),
+      password: new NaoFormControl('' ),
+      confirm_password: new NaoFormControl(''),
       email: new FormControl(1, NaoValidators.inEnumKey(DaysOfWeek2)),
       name2: new FormControl('Monday', NaoValidators.inEnum(DaysOfWeek)),
       ssn: new FormControl('', NaoValidators.isSSN()),
       zip: new FormControl('65567', NaoValidators.isUSZip()),
       phone: new FormControl('123 445 6789', NaoValidators.isUSPhone()),
       size: new FormControl(null),
-    });
+    },  { validators: NaoValidators.checkPasswords()});
     this.groupForm = this.fb.group({
       name_grp: 'tiger',
       weight: 80,

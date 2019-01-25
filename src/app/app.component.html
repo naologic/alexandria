@@ -26,6 +26,19 @@
   </div>
   <br>
   <div>
+    <label>Password </label>
+    <input formControlName="password" type="text">
+    <small *ngIf="name.invalid">Not valid</small>
+  </div>
+  <br>
+  <div>
+    <label>Cofirm Password </label>
+    <input formControlName="confirm_password" type="text">
+    <small *ngIf="name.invalid">Not valid</small>
+    <small>userForm: pristine:{{userForm.pristine}}, touched: {{userForm.touched}},dirty: {{userForm.dirty}}, valid:{{userForm.valid}} </small>
+  </div>
+  <br>
+  <div>
     <label>Control 2 </label>
     <input required formControlName="email" type="email">
     <small *ngIf="email.invalid">Not valid</small>
