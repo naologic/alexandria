@@ -111,7 +111,7 @@
   <div formGroupName="userForm">
     <div>
       <label>Name </label>
-      <input required formControlName="name" type="text">
+      <input required formControlName="name" type="text" (change)="nameChanged()">
       <small> pristine:{{name.pristine}}, touched: {{name.touched}},dirty: {{name.dirty}}, valid:{{name.valid}} </small>
     </div>
     <br>
