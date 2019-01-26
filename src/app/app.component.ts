@@ -43,14 +43,17 @@ export class AppComponent implements OnInit {
 
   constructor( private fb: NaoFormBuilder) {
     this.userForm = new NaoFormGroup({
-      name: new NaoFormControl('1', { validators: [ NaoValidators.minLength(5), NaoValidators.inObject(this.obj2, 'small.b.c') ]} ),
+      name: new NaoFormControl('1', { validators: [ NaoValidators.inObject(this.obj2, 'small.b.c') ]} ),
+      password: new NaoFormControl('' ),
+      confirm_password: new NaoFormControl(''),
       email: new FormControl(1, NaoValidators.inEnumKey(DaysOfWeek2)),
       name2: new FormControl('Monday', NaoValidators.inEnum(DaysOfWeek)),
       ssn: new FormControl('', NaoValidators.isSSN()),
       zip: new FormControl('65567', NaoValidators.isUSZip()),
       phone: new FormControl('123 445 6789', NaoValidators.isUSPhone()),
       size: new FormControl(null),
-    });
+
+    },  { validators: NaoValidators.checkPasswords()});
     this.groupForm = this.fb.naoGroup({
       name_grp: 'tiger',
       weight: 80,
