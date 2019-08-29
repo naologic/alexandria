@@ -16,7 +16,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "publish:forms": "rm -rf dist/naologic/forms && ng build @naologic/forms --prod && cd dist/naologic/forms && npm publish --access public",
-    "publish:pipes": "rm -rf dist/naologic/forms && ng build @naologic/pipes --prod && cd dist/naologic/pipes && npm publish --access public"
+    "publish:pipes": "rm -rf dist/naologic/forms && ng build @naologic/pipes --prod && cd dist/naologic/pipes && npm publish --access public",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -36,7 +38,8 @@
     "core-js": "^2.5.4",
     "lodash": "^4.17.10",
     "rxjs": "^6.0.0",
-    "zone.js": "^0.8.26"
+    "zone.js": "^0.8.26",
+    "snyk": "^1.192.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.6.8",
@@ -62,5 +65,6 @@
     "tslib": "^1.7.1",
     "tslint": "^5.11.0",
     "typescript": "~2.7.2"
-  }
+  },
+  "snyk": true
 }
