@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
       phone: new FormControl('123 445 6789', NaoValidators.isUSPhone()),
       size: new FormControl(null),
 
-    },  { validators: NaoValidators.checkPasswords()});
+    },  { validators: NaoValidators.confirmPassword()});
     this.groupForm = this.fb.naoGroup({
       name_grp: 'tiger',
       weight: 80,

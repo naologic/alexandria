@@ -5,20 +5,24 @@ export class NaoValidators {
   /**
    * Validator to check passwords
    */
-
-
-  public static checkPasswords(): ValidatorFn {
+  public static confirmPassword(password = 'password', confirmPassword = 'confirmPassword'): ValidatorFn {
     const fn = ( control: FormGroup ): ValidationErrors | null => {
-    const pass = control.get('password').value;
-    const confirmPass = control.get('confirm_password').value;
-    if ( pass === confirmPass ) {
-      return null;
-    }
-    control.markAsTouched();
-    return { notSame: true, actualValue: { pass, confirmPass } };
-  };
-  return fn;
+      const pass = control.get(password).value;
+      const confirmPass = control.get(confirmPassword).value;
+      if (pass === confirmPass) {
+        return null;
+      }
+      control.markAsTouched();
+      // -->Get: actual values
+      const actualValue: any = {};
+      actualValue[password] = pass;
+      actualValue[confirmPassword] = confirmPass;
+
+      return { notSame: true, actualValue };
+    };
+    return fn;
  }
+
  /**
    * Validator to check if control value is only a number
    */

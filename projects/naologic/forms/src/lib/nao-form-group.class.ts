@@ -1,6 +1,6 @@
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { AsyncValidatorFn, ValidatorFn } from '@angular/forms';
-import { isArray, keys, mapValues, isPlainObject, set, get} from 'lodash';
+import { isArray, mapValues, isPlainObject, set, get} from 'lodash';
 import { callNativeMarkAsFunction, getValuesByMarkedAs, NaoFormStatic } from './nao-form-static.class';
 import { NaoFormArray } from './nao-form-array.class';
 import { NaoFormOptions } from './nao-form-options';
@@ -11,10 +11,26 @@ import { NaoFormControl } from './nao-form-control.class';
 
 export class NaoFormGroup<T = any> extends FormGroup {
   private schema;
+  private formData: {
+    [index: string]: { data: FormData, contentLength: number }
+  } = {};
   constructor(controls: {
       [key: string]: AbstractControl;
     }, options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null) {
     super(controls, options, asyncValidator);
+  }
+
+  /**
+   * Merge this form with another form
+   */
+  public merge(fg: NaoFormGroup, options = { overwrite: true }): void {
+    if (fg && fg instanceof NaoFormGroup) {
+      Object.keys(fg.value).map(k => {
+        if (!this.contains(k) || (this.contains(k) && options.overwrite)) {
+          this.setControl(k, fg.get(k));
+        }
+      });
+    }
   }
 
   /**
@@ -160,7 +176,6 @@ export class NaoFormGroup<T = any> extends FormGroup {
     return super.getRawValue();
   }
 
-
   /**
    * Get object, but only keep the indexes I need
    */
@@ -184,7 +199,6 @@ export class NaoFormGroup<T = any> extends FormGroup {
       }
     }
   }
-
 
   /**
    * Get value of this shit
@@ -234,16 +248,17 @@ export class NaoFormGroup<T = any> extends FormGroup {
     return NaoFormStatic.getAllErrors(this);
   }
 
+  /**
+   * Check if form has errors
+   */
   public hasErrors(): boolean {
-    if ( this.getAllErrors() !== null)  {
-      return true;
-    }
-    return false;
+    return this.getAllErrors() !== null;
   }
+
   /**
    * List the errors in a flat map
    */
-  public getAllErrorsFlat(path = '') {
+  public getAllErrorsFlat() {
     return NaoFormStatic.getAllErrorsFlat(this);
   }
 
@@ -280,6 +295,21 @@ export class NaoFormGroup<T = any> extends FormGroup {
   }
 
   /**
+   *  Get data as FromData
+   *  @experimental
+   */
+  public getAsFromData(path: Array<string | number> | string): FormData | null {
+    const formData = new FormData();
+    const value = this.getValue();
+
+    for (const key of Object.keys(value) ) {
+      formData.append(key, value[key]);
+    }
+
+    return formData;
+  }
+
+  /**
    * Retrieves a child control from a formGroup and returns only the value, not the entire object
    */
   public getValueFrom<A = any>(path: Array<string | number> | string): A {
@@ -288,6 +318,60 @@ export class NaoFormGroup<T = any> extends FormGroup {
       return getValue.value as A;
     }
     return null;
+  }
+
+  /**
+   * Get file list form data
+   */
+  public getFormData(path: string): { data: FormData, contentLength: number } {
+    return path ? this.formData[path] || null : null;
+  }
+
+  /**
+   * Add files to form group
+   */
+  public setFormDataFiles(path: string, files: FileList): void {
+    // -->Check: the form data
+    if (!(this.formData[path] instanceof FormData)) {
+      this.formData[path] = { data: new FormData(), contentLength: 0 };
+    }
+
+    // -->Set: files
+    if (Object.keys(files).length > 0) {
+      Object.keys(files).map(f => {
+        // -->Set: files
+        this.formData[path].data.append(`files`, files[f], files[f].name);
+        // -->Length
+        this.formData[path].contentLength += +files[f].size;
+      });
+    }
+  }
+
+  /**
+   * Add form data to an existing FormData instance
+   */
+  public setFormData(path: string, data: any): void {
+    // -->Check: the form data
+    if (!(this.formData[path] instanceof FormData)) {
+      this.formData[path] = { data: new FormData(), contentLength: 0 };
+    }
+
+    // -->Set: data
+    if (data) {
+      Object.keys(data).map(k => {
+        // -->Append: data
+        this.formData[path].data.append(k, data[k]);
+      });
+    }
+  }
+
+  /**
+   * Remove form data
+   */
+  public removeFormData(path: string): void {
+    if (path && this.formData[path]) {
+      delete this.formData[path];
+    }
   }
 
   /**

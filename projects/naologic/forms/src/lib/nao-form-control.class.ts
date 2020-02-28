@@ -18,15 +18,17 @@ export class NaoFormControl extends FormControl {
     return super.reset( null, options );
   }
 
-
+  /**
+   * Get all errors
+   */
   public getAllErrors() {
     return NaoFormStatic.getAllErrors(this);
   }
 
+  /**
+   * Check if control has errors
+   */
   public hasErrors(): boolean {
-    if ( this.getAllErrors() !== null)  {
-      return true;
-    }
-    return false;
+    return this.getAllErrors() !== null;
   }
 }

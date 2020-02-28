@@ -1,10 +1,10 @@
-import { isArray, mapValues} from 'lodash';
-import { AbstractControl, AbstractControlOptions, FormArray } from '@angular/forms';
+import { AbstractControl, FormArray } from '@angular/forms';
 import { AsyncValidatorFn, ValidatorFn } from '@angular/forms';
 import { callNativeMarkAsFunction, getValuesByMarkedAs, NaoFormStatic } from './nao-form-static.class';
 import { NaoFormGroup } from './nao-form-group.class';
 import { NaoFormOptions } from './nao-form-options';
 import { NaoAbstractControlOptions} from './nao-form.interface';
+import { NaoFormControl } from './nao-form-control.class';
 
 
 
@@ -14,6 +14,133 @@ export class NaoFormArray<T = any> extends FormArray {
     options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
   ) {
     super(controls, options, asyncValidator);
+  }
+
+  /**
+   * Validate the contents of the array between these 2 indexes, everything else, remove validations
+   */
+  public validationInterval(startAt = 0, endAt = this.controls.length): void {
+    this.map((control, index) => {
+      if (index < startAt || index > endAt) {
+        control.clearValidators();
+      }
+      return control;
+    });
+  }
+
+  /**
+   * Minimum valid values in an array
+   * @experimental
+   */
+  public minValid(no: number): boolean {
+    const errs = this.getAllErrorsFlat();
+    return errs ? this.controls.length - Object.keys(errs).length > no : true;
+  }
+
+  /**
+   * Maximum valid values in an array
+   * @experimental
+   */
+  public maxValid(no: number): boolean {
+    const errs = this.getAllErrorsFlat();
+    return errs ? this.controls.length - Object.keys(errs).length < no : false;
+  }
+
+  /**
+   * Merge this form with another form
+   */
+  public merge(fa: NaoFormArray, options = { startAt: 0 }): void {
+    if (fa && fa instanceof NaoFormArray) {
+      fa.controls.map((c, i) => {
+        this.insert(options.startAt + i, c);
+      });
+    }
+  }
+
+  /**
+   * The splice() method changes the contents of an array by removing or replacing existing
+   */
+  public splice(startAt: number, deleteCount = 0, ...items: AbstractControl[]): void {
+    // -->Splice: the controls
+    this.controls.splice(startAt, deleteCount, ...items);
+  }
+
+  /**
+   * Returns the elements of an array that meet the condition specified in a callback function.
+   */
+  public filter(fn: (control: AbstractControl, index?: number, array?: AbstractControl[]) => boolean): void {
+    // -->Filter: the controls
+    this.controls.filter(fn);
+  }
+
+  /**
+   * Returns the elements of an array that meet the condition specified in a callback function.
+   */
+  // public filterValues(fn: (value: T, index?: number, array?: AbstractControl[]) => T[]): void {
+  //   // -->Filter: the controls
+  //   this.getValue().filter<T>(fn);
+  // }
+
+  /**
+   * Returns the elements of an array that meet the condition specified in a callback function.
+   */
+  public map(fn: (control: AbstractControl, index?: number, array?: AbstractControl[]) => AbstractControl): void {
+    // -->Filter: the controls
+    this.controls.map(fn);
+  }
+
+  /**
+   * Returns the elements of an array that meet the condition specified in a callback function.
+   */
+  public mapValues(fn: (value: any, index?: number, array?: any[]) => any): void {
+    // -->Filter: the controls
+    this.getValue().map(fn);
+  }
+
+  /**
+   * Get the `NaoFormControl` at the given `index` in the array.
+   */
+  public atAsNaoFormControl(i: number): NaoFormControl {
+    return super.at(i) as NaoFormControl;
+  }
+
+  /**
+   * Get the `NaoFormArray` at the given `index` in the array.
+   */
+  public atAsNaoFormArray(i: number): NaoFormArray {
+    return super.at(i) as NaoFormArray;
+  }
+
+  /**
+   * Get the `NaoFormGroup` at the given `index` in the array.
+   */
+  public atAsNaoFormGroup(i: number): NaoFormGroup {
+    return super.at(i) as NaoFormGroup;
+  }
+
+  /**
+   * Get the `AbstractControl` at the given `index` in the array.
+   */
+  public atAsAbstractControl(i: number): AbstractControl {
+    return super.at(i) as AbstractControl;
+  }
+
+  /**
+   * Enable form after delay
+   * @param delay
+   * @param opts
+   */
+  public enableDelay(delay: number, opts?: NaoAbstractControlOptions): void {
+    setTimeout(() => this.enable(opts), delay);
+  }
+
+  /**
+   * Disable form after delay
+   * @param delay
+   * @param opts
+   */
+  public disableDelay(delay: number, opts?: NaoAbstractControlOptions): void {
+    setTimeout(() => this.disable(opts), delay);
   }
 
   /**
@@ -84,7 +211,7 @@ export class NaoFormArray<T = any> extends FormArray {
   public getValues(...indexes: number[]): Partial<T[]> {
     if (Array.isArray(indexes)) {
       const fa = new NaoFormArray(indexes
-        .map(i => this.at(i))
+        .map(i => super.at(i))
         .filter( e => {
           if (e) {
             return e;
@@ -160,47 +287,39 @@ export class NaoFormArray<T = any> extends FormArray {
     return NaoFormStatic.getAllErrors(this);
   }
 
+  /**
+   * Check if it has errors
+   */
   public hasErrors(): boolean {
-    if ( this.getAllErrors() !== null ) {
-      return true;
-    }
-    return false;
+    return this.getAllErrors() !== null;
   }
 
   /**
    * List the errors in a flat map
    */
-  public getAllErrorsFlat(path = '') {
+  public getAllErrorsFlat() {
     return NaoFormStatic.getAllErrorsFlat(this);
-  }
-  
-   /**
-   * Retrieves a child control from a NaoFormArray and returns only the value, not the entire object
-   */
-  public getValueFrom<A = any>(path: number): A {
-    const getValue = super.at(path);
-    if (getValue instanceof AbstractControl) {
-      return getValue.value as A;
-    }
-    return null;
   }
 
   /**
    * Get last item
    */
   public getLast(): AbstractControl {
-    if (this.length > 0) {
-      return this.at(this.length - 1);
-    } else {
-      return null;
-    }
+    return this.length > 0 ? super.at(this.length - 1) : null;
+  }
+
+  /**
+   * Get first item
+   */
+  public getFirst(): AbstractControl {
+    return super.at(0) || null;
   }
 
   /**
    * Resets the FormArray and all descendants are marked pristine and untouched, and the value of all descendants to null or null maps.
    */
   public empty(options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void {
-  this.controls = [];
-  return super.reset( [], options );
+    this.controls = [];
+    return super.reset( [], options );
   }
 }

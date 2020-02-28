@@ -1,10 +1,6 @@
 import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors } from '@angular/forms';
-import { mapValues, filter, isArray, isPlainObject, keys, merge, last } from 'lodash';
-import {NaoAbstractControlOptions} from './nao-form.interface';
-import {NaoFormGroup} from './nao-form-group.class';
-import {NaoFormArray} from './nao-form-array.class';
-import {injectComponentFactoryResolver} from '@angular/core/src/render3';
-import {NaoFormControl} from './nao-form-control.class';
+import { mapValues, isArray, isPlainObject, keys } from 'lodash';
+import { NaoAbstractControlOptions } from './nao-form.interface';
 
 /**
  * Form Helper
@@ -24,7 +20,7 @@ export class NaoFormStatic {
       // -->Get: all errors
       errs = mapValues(formEl.controls, (vv, cc) => {
         const err = NaoFormStatic.getAllErrors(vv);
-        return (err) ? err : null;
+        return err || null;
       });
       // -->Eliminate: null values
       keys(errs)
@@ -73,8 +69,9 @@ export class NaoFormStatic {
           const newKey = (isArr) ? '[' + k + ']' : k;
           const newPath = (isArr) ? (p) ? p + newKey : newKey : (p) ? p + '.' + newKey : newKey;
 
-          const err = walk(fEl.get(k), newPath);
-          errs[newPath] = (err) ? err : null;
+          // const err = walk(fEl.get(k), newPath);
+          // errs[newPath] = err || null;
+          walk(fEl.get(k), newPath);
         });
         // -->Eliminate: null values
         keys(errs)
@@ -152,12 +149,12 @@ const getValuesByMarkedAs = (control: AbstractControl, type: 'touched'|'untouche
     throw Error(`The only allowed 'markAs' types are touched|untouched|dirty|pristine|pending. I can't accept ${type}`);
   }
   // -->Init: res
-  const res = {ok: false, value: null, type};
+  const res: any = {ok: false, value: null, type};
 
   // -->Check: if the `markAs` property is as expected
   if (control) {
     res.ok = true;
-    if (control instanceof FormGroup || control instanceof NaoFormGroup) {
+    if (control instanceof FormGroup) {
       // -->Init: the value by type
       res.value = {} as any;
 
@@ -169,7 +166,7 @@ const getValuesByMarkedAs = (control: AbstractControl, type: 'touched'|'untouche
           res.value[index] = value;
         }
       });
-    } else if (control instanceof FormArray || control instanceof NaoFormArray) {
+    } else if (control instanceof FormArray) {
       if (Array.isArray(control.controls)) {
         // -->Init: the value by type
         res.value = [];
@@ -186,7 +183,7 @@ const getValuesByMarkedAs = (control: AbstractControl, type: 'touched'|'untouche
       } else {
         throw Error(`I received a form array with no controls index. This is not normal`);
       }
-    } else if (control instanceof FormControl || control instanceof NaoFormControl) {
+    } else if (control instanceof FormControl) {
       if (control[type]) {
         res.value = control.value;
       } else {
