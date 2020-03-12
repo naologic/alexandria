@@ -17,6 +17,13 @@ export class NaoFormArray<T = any> extends FormArray {
   }
 
   /**
+   * Check if get patch exists
+   */
+  public exists(path: Array<string | number> | string): boolean {
+    return super.get(path) !== null;
+  }
+
+  /**
    * Validate the contents of the array between these 2 indexes, everything else, remove validations
    */
   public validationInterval(startAt = 0, endAt = this.controls.length): void {

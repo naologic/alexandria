@@ -263,6 +263,13 @@ export class NaoFormGroup<T = any> extends FormGroup {
   }
 
   /**
+   * Check if get patch exists
+   */
+  public exists(path: Array<string | number> | string): boolean {
+    return super.get(path) !== null;
+  }
+
+  /**
    * Retrieves a child control given the control's name or path from a formGroup typecasted as NaoFormArray
    */
   public getAsNaoFormArray(path: Array<string | number> | string): NaoFormArray | null {
@@ -272,7 +279,8 @@ export class NaoFormGroup<T = any> extends FormGroup {
     }
     return null;
   }
- /**
+
+  /**
    *  Retrieves a child control given the control's name or path from a formGroup typecasted as as NaoFormControl
    */
   public getAsNaoFormControl(path: Array<string | number> | string): NaoFormControl | null {
