@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
     this.userForm = new NaoFormGroup({
       name: new NaoFormControl('1', { validators: [ NaoValidators.inObject(this.obj2, 'small.b.c') ]} ),
       password: new NaoFormControl('' ),
-      confirm_password: new NaoFormControl(''),
+      confirmPassword: new NaoFormControl(''),
       email: new FormControl(1, NaoValidators.inEnumKey(DaysOfWeek2)),
       name2: new FormControl('Monday', NaoValidators.inEnum(DaysOfWeek)),
       ssn: new FormControl('', NaoValidators.isSSN()),
@@ -138,7 +138,6 @@ export class AppComponent implements OnInit {
     return this.userForm.get('phone') as FormControl;
   }
 
-
   get name_grp() {
     return this.groupForm.get('name_grp') as FormControl;
   }
@@ -153,6 +152,7 @@ export class AppComponent implements OnInit {
   send() {
     console.log(this.groupForm.value);
   }
+
   reset() {
      this.userForm.reset();
   }
