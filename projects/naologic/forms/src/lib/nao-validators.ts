@@ -7,6 +7,7 @@ export class NaoValidators {
    */
   public static confirmPassword(password = 'password', confirmPassword = 'confirmPassword'): ValidatorFn {
     const fn = ( control: FormGroup ): ValidationErrors | null => {
+
       const pass = control.get(password).value;
       const confirmPass = control.get(confirmPassword).value;
       if (pass === confirmPass) {

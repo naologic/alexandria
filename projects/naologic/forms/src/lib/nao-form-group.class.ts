@@ -201,6 +201,46 @@ export class NaoFormGroup<T = any> extends FormGroup {
   }
 
   /**
+   * Remove all the empty values: null, undefined, ''
+   */
+  public removeEmpty(): void {
+    this.removeEmptyFromNaoFormGroup(this);
+  }
+
+  /**
+   * Remove empty or null values from NaoFormGroup
+   * @param group
+   */
+  public removeEmptyFromNaoFormGroup(group: NaoFormGroup) {
+    Object.keys(group.controls).map((key: string) => {
+      // -->Get: Abstract control
+      const abstractControl = group.get(key);
+
+      if (abstractControl instanceof NaoFormGroup) {
+        // -->Iterate: over NaoFormGroup
+        this.removeEmptyFromNaoFormGroup(abstractControl);
+        // -->Check: if the NaoFormGroup is empty and remove it
+        if (!Object.keys(abstractControl.controls).length) {
+          group.removeControl(key);
+        }
+      } else if (abstractControl instanceof NaoFormArray) {
+        // -->Iterate: over NaoFormArray
+        abstractControl.removeEmpty();
+        // -->Check: if the NaoFormArray is empty and remove it
+        if (!Object.keys(abstractControl.controls).length) {
+          group.removeControl(key);
+        }
+      } else if (abstractControl instanceof NaoFormControl) {
+        // -->Remove: control if it's empty or null
+        if (abstractControl.value === '' || abstractControl.value === null) {
+          group.removeControl(key);
+        }
+      }
+    });
+  }
+
+
+  /**
    * Get value of this shit
    */
   public disable(opts?: NaoAbstractControlOptions): any {
