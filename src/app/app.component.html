@@ -18,6 +18,21 @@
   </li>
 </ul>
 
+<div [formGroup]="maskGroup">
+  <input naoMask="0*.00" formControlName="price"
+         [currency]="{name: 'Dollar', code: 'USD', digitsInfo: '2.1-2', display: 'code', locale: 'fr-FR'}"
+         [options]="{ valueFormatted: true }"
+         (formattedValueChange)="maskGroup.get('formattedPrice').patchValue($event)"
+    />
+  <br>
+  <span>valued : {{ maskGroup.get('price').value }}</span>
+  <br>
+  <span>valueFormatted : {{ maskGroup.get('formattedPrice').value }}</span>
+  <br>
+  <br>
+  <br>
+</div>
+
 <form [formGroup]="userForm">
   <div>
     <label>Control 1 </label>
@@ -182,3 +197,4 @@
     <br><br>
   </div>
 </form>
+

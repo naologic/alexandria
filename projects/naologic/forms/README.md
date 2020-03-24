@@ -776,6 +776,234 @@ _Get all errors from this form_
 ***
 
 
+***
+## **gt()**
+
+`gt(value)`
+_Check if the current formControl value is greater then a number_
+
+##### Arguments
+
+* `value(`_`number`_`)`
+
+##### Returns
+
+*   _true | false_
+
+#### Example
+
+```typescript
+    public fg: NaoFormGroup;
+    
+    this.fg = new NaoFormGroup({
+        number: new NaoFormControl(20),
+    });
+
+    console.log(this.fg.getAsNaoFormControl('number').gt(10));
+    // --> true
+```
+***
+
+
+***
+## **lt()**
+
+`lt(value)`
+_Check if the current formControl value is less then a number_
+
+##### Arguments
+
+* `value(`_`number`_`)`
+
+##### Returns
+
+*   _true | false_
+
+#### Example
+
+```typescript
+    public fg: NaoFormGroup;
+    
+    this.fg = new NaoFormGroup({
+        number: new NaoFormControl(20),
+    });
+
+    console.log(this.fg.getAsNaoFormControl('number').lt(10));
+    // --> false
+```
+***
+
+***
+## **eq()**
+
+`eq(value)`
+_Check if the current formControl value is equal to a value_
+
+##### Arguments
+
+* `value(`_`string | number | boolean`_`)`
+
+##### Returns
+
+*   _true | false_
+
+#### Example
+
+```typescript
+    public fg: NaoFormGroup;
+    
+    this.fg = new NaoFormGroup({
+        number: new NaoFormControl(20),
+        string: new NaoFormControl("nao")
+    });
+
+    console.log(this.fg.getAsNaoFormControl('number').eq(20));
+    // --> true
+    console.log(this.fg.getAsNaoFormControl('string').eq('nao'));
+    // --> true
+```
+***
+
+***
+## **gte()**
+
+`gte(value)`
+_Check if the current formControl value is greater or equal then a number_
+
+##### Arguments
+
+* `value(`_`number`_`)`
+
+##### Returns
+
+*   _true | false_
+
+#### Example
+
+```typescript
+    public fg: NaoFormGroup;
+    
+    this.fg = new NaoFormGroup({
+        number: new NaoFormControl(20),
+    });
+
+    console.log(this.fg.getAsNaoFormControl('number').gte(20));
+    // --> true
+```
+***
+
+
+***
+## **lte()**
+
+`lte(value)`
+_Check if the current formControl value is less or equal then a number_
+
+##### Arguments
+
+* `value(`_`number`_`)`
+
+##### Returns
+
+*   _true | false_
+
+#### Example
+
+```typescript
+    public fg: NaoFormGroup;
+    
+    this.fg = new NaoFormGroup({
+        number: new NaoFormControl(20),
+    });
+
+    console.log(this.fg.getAsNaoFormControl('number').lte(10));
+    // --> false
+```
+***
+
+***
+## **not()**
+
+`not(value)`
+_Check if the current formControl value is not equal with a value_
+
+##### Arguments
+
+* `value(`_`string | number | boolean`_`)`
+
+##### Returns
+
+*   _true | false_
+
+#### Example
+
+```typescript
+    public fg: NaoFormGroup;
+    
+    this.fg = new NaoFormGroup({
+        number: new NaoFormControl(20),
+        string: new NaoFormControl("nao")
+    });
+
+    console.log(this.fg.getAsNaoFormControl('number').not(20));
+    // --> false
+    console.log(this.fg.getAsNaoFormControl('string').not('nao'));
+    // --> false
+```
+***
+
+***
+## **removeEmpty()**
+
+`removeEmpty()`
+_Removes all the empty values ( '' | null | undefined ) from a NaoFormGroup or NaoFormArray including the nested controls_
+
+#### Example
+
+```typescript
+    public fg: NaoFormGroup;
+    
+    this.fg = new NaoFormGroup({
+        number: new NaoFormControl(20),
+        string: new NaoFormControl("nao"),
+        info: new NaoFormGroup({
+            firstName: new NaoFormControl(),
+            lastName: new NaoFormControl('')
+        }),  
+        phone: new NaoFormControl(null)
+    });
+    
+    this.fg.removeEmpty();
+
+    console.log(this.fg.value);
+    // --> { number: 20, string: "nao" }
+    
+```
+***
+
+***
+## **naoMask with currency**
+
+`naoMask with currency`
+_nao masks that returns the formatted value on `(formattedValueChange)`_
+
+
+#### Example
+
+```typescript   
+    // ---> Input value: 124124.23
+    <input naoMask="0*.00" formControlName="price"
+        [currency]="{code: 'EUR', digitsInfo: '2.1-2', display: 'symbol', locale: 'en-US'}"
+        [options]="{ valueFormatted: true }"
+        (formattedValueChange)="fg.get('priceFormatted').patchValue($event)"/>
+
+    <span>Formated value: {{ fg.get('priceFormatted').value }}</span>
+    // ---> Formated value: €124,124.23
+    
+```
+***
+
+
 ### License 
 ![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
 
