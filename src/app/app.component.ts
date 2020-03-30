@@ -3,6 +3,11 @@ import { FormArray, FormBuilder, FormControl, FormGroup, AbstractControl, Valida
 import { NaoValidators, NaoFormGroup, NaoFormBuilder, NaoFormControl, NaoFormArray } from '@naologic/forms';
 import { mapValues } from 'lodash';
 
+// TODO: remove this after testing
+import localeFr from '@angular/common/locales/fr';
+import {registerLocaleData} from '@angular/common';
+registerLocaleData(localeFr);
+
 enum DaysOfWeek {
   SUN = '1', MON = 'Monday', TUE = 'Tue', WED = 'Wed', THU = 'Thu', FRI = 'Fri', SAT = 'Sat'
 }
@@ -34,6 +39,8 @@ export class AppComponent implements OnInit {
   public userForm: NaoFormGroup;
   public groupForm: NaoFormGroup;
   public mixedGroup: NaoFormGroup;
+  public maskGroup: NaoFormGroup;
+
   touchedValues: String[];
   public testForm: NaoFormGroup;
   public naoFormGroup: NaoFormGroup;
@@ -45,7 +52,7 @@ export class AppComponent implements OnInit {
     this.userForm = new NaoFormGroup({
       name: new NaoFormControl('1', { validators: [ NaoValidators.inObject(this.obj2, 'small.b.c') ]} ),
       password: new NaoFormControl('' ),
-      confirm_password: new NaoFormControl(''),
+      confirmPassword: new NaoFormControl(''),
       email: new FormControl(1, NaoValidators.inEnumKey(DaysOfWeek2)),
       name2: new FormControl('Monday', NaoValidators.inEnum(DaysOfWeek)),
       ssn: new FormControl('', NaoValidators.isSSN()),
@@ -95,18 +102,21 @@ export class AppComponent implements OnInit {
     ssn: new NaoFormControl('000 00 0000', NaoValidators.isSSN()),
   });
 
-
+  this.maskGroup = new NaoFormGroup({
+    price: new NaoFormControl(1256),
+    formattedPrice: new NaoFormControl(''),
+  });
   }
 
   ngOnInit() {
- this.groupForm.valueChanges.subscribe(console.log);
- this.send();
- this.checkErrors();
+     this.groupForm.valueChanges.subscribe(console.log);
+     this.send();
+     this.checkErrors();
   }
   checkErrors() {
     const firstNameControl = this.naoFormGroup.getAsNaoFormControl('firstName');
     console.log('control hasErrors: ', firstNameControl.hasErrors());
-   console.log('naoFomGroup hasErrors: ', this.naoFormGroup.hasErrors());
+    console.log('naoFomGroup hasErrors: ', this.naoFormGroup.hasErrors());
   }
   nameChanged() {
     console.log('has errors :', this.mixedGroup.hasErrors());
@@ -138,7 +148,6 @@ export class AppComponent implements OnInit {
     return this.userForm.get('phone') as FormControl;
   }
 
-
   get name_grp() {
     return this.groupForm.get('name_grp') as FormControl;
   }
@@ -153,6 +162,7 @@ export class AppComponent implements OnInit {
   send() {
     console.log(this.groupForm.value);
   }
+
   reset() {
      this.userForm.reset();
   }

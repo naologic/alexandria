@@ -18,6 +18,21 @@
   </li>
 </ul>
 
+<div [formGroup]="maskGroup">
+  <input naoMask="0*.00" formControlName="price"
+         [currency]="{name: 'Dollar', code: 'USD', digitsInfo: '2.1-2', display: 'code', locale: 'fr-FR'}"
+         [options]="{ valueFormatted: true }"
+         (formattedValueChange)="maskGroup.get('formattedPrice').patchValue($event)"
+    />
+  <br>
+  <span>valued : {{ maskGroup.get('price').value }}</span>
+  <br>
+  <span>valueFormatted : {{ maskGroup.get('formattedPrice').value }}</span>
+  <br>
+  <br>
+  <br>
+</div>
+
 <form [formGroup]="userForm">
   <div>
     <label>Control 1 </label>
@@ -33,7 +48,7 @@
   <br>
   <div>
     <label>Cofirm Password </label>
-    <input formControlName="confirm_password" type="text">
+    <input formControlName="confirmPassword" type="text">
     <small *ngIf="name.invalid">Not valid</small>
     <small>userForm: pristine:{{userForm.pristine}}, touched: {{userForm.touched}},dirty: {{userForm.dirty}}, valid:{{userForm.valid}} </small>
   </div>
@@ -136,13 +151,13 @@
     <div>
       <label>SSN </label>
       <input required formControlName="ssn" type="text">
-      <small> pristine:{{ssn.pristine}}, touched: {{ssn.touched}},dirty: {{ssn.dirty}}, valid: {{ssn.valid}}</small>      
+      <small> pristine:{{ssn.pristine}}, touched: {{ssn.touched}},dirty: {{ssn.dirty}}, valid: {{ssn.valid}}</small>
     </div>
     <br>
     <div>
       <label>Phone </label>
       <input required formControlName="phone" type="text">
-      <small> pristine:{{phone.pristine}}, touched: {{phone.touched}},dirty: {{phone.dirty}}, valid: {{phone.valid}}</small>  
+      <small> pristine:{{phone.pristine}}, touched: {{phone.touched}},dirty: {{phone.dirty}}, valid: {{phone.valid}}</small>
     </div>
     <br>
     <button (click)="resetMixed()" type="button">Reset</button>
@@ -182,3 +197,4 @@
     <br><br>
   </div>
 </form>
+

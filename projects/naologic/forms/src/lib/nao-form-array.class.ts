@@ -329,4 +329,53 @@ export class NaoFormArray<T = any> extends FormArray {
     this.controls = [];
     return super.reset( [], options );
   }
+
+  /**
+   * Remove all the empty values: null, undefined, ''
+   */
+  public removeEmpty(): void {
+    this.removeEmptyFromNaoFormArray(this);
+  }
+
+  /**
+   * Remove empty or null values from NaoFormArray
+   * @param array
+   */
+  public removeEmptyFromNaoFormArray(array: NaoFormArray) {
+    const arrIndex = [];
+
+    Object.keys(array.controls).map((key: string, index: number) => {
+      // -->Get: Abstract control
+      const abstractControl = array.get(key);
+
+      if (abstractControl instanceof NaoFormGroup) {
+        // -->Iterate: over NaoFormGroup
+        abstractControl.removeEmpty();
+        // -->Check: if the NaoFormGroup is empty and remove it
+        if (!Object.keys(abstractControl.controls).length) {
+          array.removeAt(index);
+        }
+      } else if (abstractControl instanceof NaoFormArray) {
+        // -->Iterate: over NaoFormArray
+        this.removeEmptyFromNaoFormArray(abstractControl);
+        // -->Check: if the NaoFormArray is empty and remove it
+        if (!Object.keys(abstractControl.controls).length) {
+          array.removeAt(index);
+        }
+      } else if (abstractControl instanceof NaoFormControl) {
+        // -->Remove: control if it's empty or null
+        if (abstractControl.value === '' || abstractControl.value === null) {
+          arrIndex.push(index);
+        }
+      }
+    });
+
+    // -->Remove: all empty values
+    if (arrIndex.length) {
+      for (const index of arrIndex.reverse()) {
+        array.removeAt(index);
+      }
+    }
+  }
+
 }
