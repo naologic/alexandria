@@ -1,19 +1,73 @@
 import { AbstractControl, FormArray } from '@angular/forms';
 import { AsyncValidatorFn, ValidatorFn } from '@angular/forms';
-import { callNativeMarkAsFunction, getValuesByMarkedAs, NaoFormStatic } from './nao-form-static.class';
+import { callNativeMarkAsFunction, cloneAbstractControl, getValuesByMarkedAs, NaoFormStatic } from './nao-form-static.class';
 import { NaoFormGroup } from './nao-form-group.class';
 import { NaoFormOptions } from './nao-form-options';
 import { NaoAbstractControlOptions} from './nao-form.interface';
 import { NaoFormControl } from './nao-form-control.class';
+import { isPlainObject, merge, pick } from 'lodash';
+import { BehaviorSubject } from 'rxjs';
 
 
 
 export class NaoFormArray<T = any> extends FormArray {
+  public metadata$ = new BehaviorSubject<any>(null);
   constructor(
     controls: AbstractControl[],
-    options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
+    options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null,
+    asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null,
+    meta?: any
   ) {
     super(controls, options, asyncValidator);
+    // -->Set: meta
+    if (meta) {
+      this.setMetadata(meta);
+    }
+  }
+
+  /**
+   * Get metadata
+   * @example
+   *    form.getMetadata('value')
+   *    form.getMetadata()
+   */
+  public getMetadata(...indexes: string[]): any {
+    if (Array.isArray(indexes) && indexes.length) {
+      return pick(this.metadata$.getValue(), indexes);
+    }
+    return this.metadata$.getValue();
+  }
+
+  /**
+   * Set metadata
+   * @example
+   *    form.setMetadata({ value: 'Pied Piper', ceo: 'Richard Hendrix' })
+   */
+  public setMetadata(meta, mergeData = false): NaoFormArray {
+    if (!isPlainObject(meta)) {
+      throw new Error(`Metadata must be an object. Ex: { value: 'Pied Piper' }`);
+    }
+    this.metadata$.next(mergeData ? merge({}, meta, this.metadata$.getValue()) : meta);
+    return this;
+  }
+
+  /**
+   * List the keys
+   *    @example
+   *      formControl.listMetadataKeys() --> ['value', 'ceo']
+   */
+  public listMetadataKeys(): string[] {
+    return Object.keys(this.metadata$.getValue() || {});
+  }
+
+  /**
+   * Clear the keys
+   *    @example
+   *      formControl.clearMetadataKeys()
+   */
+  public clearMetadata(): NaoFormArray {
+    this.metadata$.next(null);
+    return this;
   }
 
   /**
@@ -378,4 +432,14 @@ export class NaoFormArray<T = any> extends FormArray {
     }
   }
 
+  /**
+   * Clone the current formControl
+   */
+  public clone(reset = false) {
+    const fc = cloneAbstractControl(this);
+    if (reset) {
+      fc.reset({ onlySelf: false, emitEvent: false });
+    }
+    return fc;
+  }
 }

@@ -1,23 +1,76 @@
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { AsyncValidatorFn, ValidatorFn } from '@angular/forms';
-import { isArray, mapValues, isPlainObject, set, get} from 'lodash';
-import { callNativeMarkAsFunction, getValuesByMarkedAs, NaoFormStatic } from './nao-form-static.class';
+import { isArray, mapValues, merge, isPlainObject, set, get, pick } from 'lodash';
+import { callNativeMarkAsFunction, cloneAbstractControl, getValuesByMarkedAs, NaoFormStatic } from './nao-form-static.class';
 import { NaoFormArray } from './nao-form-array.class';
 import { NaoFormOptions } from './nao-form-options';
 import { NaoAbstractControlOptions } from './nao-form.interface';
 import { NaoFormControl } from './nao-form-control.class';
-
+import { BehaviorSubject } from 'rxjs';
 
 
 export class NaoFormGroup<T = any> extends FormGroup {
+  public metadata$ = new BehaviorSubject<any>(null);
   private schema;
   private formData: {
     [index: string]: { data: FormData, contentLength: number }
   } = {};
-  constructor(controls: {
-      [key: string]: AbstractControl;
-    }, options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null) {
+  constructor(
+    controls: { [key: string]: AbstractControl; },
+    options?: ValidatorFn | ValidatorFn[] | NaoFormOptions | null,
+    asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null,
+    meta?: any
+  ) {
     super(controls, options, asyncValidator);
+    // -->Set: meta
+    if (meta) {
+      this.setMetadata(meta);
+    }
+  }
+
+  /**
+   * Get metadata
+   * @example
+   *    form.getMetadata('value')
+   *    form.getMetadata()
+   */
+  public getMetadata(...indexes: string[]): any {
+    if (Array.isArray(indexes) && indexes.length) {
+      return pick(this.metadata$.getValue(), indexes);
+    }
+    return this.metadata$.getValue();
+  }
+
+  /**
+   * Set metadata
+   * @example
+   *    form.setMetadata({ value: 'Pied Piper', ceo: 'Richard Hendrix' })
+   */
+  public setMetadata(meta, mergeData = false): NaoFormGroup {
+    if (!isPlainObject(meta)) {
+      throw new Error(`Metadata must be an object. Ex: { value: 'Pied Piper' }`);
+    }
+    this.metadata$.next(mergeData ? merge({}, meta, this.metadata$.getValue()) : meta);
+    return this;
+  }
+
+  /**
+   * List the keys
+   *    @example
+   *      formControl.listMetadataKeys() --> ['value', 'ceo']
+   */
+  public listMetadataKeys(): string[] {
+    return Object.keys(this.metadata$.getValue() || {});
+  }
+
+  /**
+   * Clear the keys
+   *    @example
+   *      formControl.clearMetadataKeys()
+   */
+  public clearMetadata(): NaoFormGroup {
+    this.metadata$.next(null);
+    return this;
   }
 
   /**
@@ -427,6 +480,17 @@ export class NaoFormGroup<T = any> extends FormGroup {
    */
   public empty(options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void {
     return super.reset( {}, options );
+  }
+
+  /**
+   * Clone the current formControl
+   */
+  public clone(reset = false) {
+    const fc = cloneAbstractControl(this);
+    if (reset) {
+      fc.reset({ onlySelf: false, emitEvent: false });
+    }
+    return fc;
   }
 }
 

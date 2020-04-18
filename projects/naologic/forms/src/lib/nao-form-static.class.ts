@@ -1,6 +1,9 @@
 import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { mapValues, isArray, isPlainObject, keys } from 'lodash';
 import { NaoAbstractControlOptions } from './nao-form.interface';
+import { NaoFormGroup } from './nao-form-group.class';
+import { NaoFormArray } from './nao-form-array.class';
+import { NaoFormControl } from './nao-form-control.class';
 
 /**
  * Form Helper
@@ -196,6 +199,42 @@ const getValuesByMarkedAs = (control: AbstractControl, type: 'touched'|'untouche
   // -->Return: the result
   return res;
 };
+
+/**
+ * Deep clones the given AbstractControl, preserving values, validators, async validators, and disabled status.
+ * @param control AbstractControl
+ * @returns AbstractControl
+ */
+export function cloneAbstractControl<T extends AbstractControl>(control: T): T {
+  let newControl: T;
+
+  if (control instanceof NaoFormGroup) {
+    const formGroup = new NaoFormGroup({}, control.validator, control.asyncValidator);
+    const controls = control.controls;
+
+    Object.keys(controls).forEach(key => {
+      formGroup.addControl(key, cloneAbstractControl(controls[key]));
+    });
+
+    newControl = formGroup as any;
+  } else if (control instanceof NaoFormArray) {
+    const formArray = new NaoFormArray([], control.validator, control.asyncValidator);
+
+    control.controls.forEach(formControl => formArray.push(cloneAbstractControl(formControl)));
+
+    newControl = formArray as any;
+  } else if (control instanceof NaoFormControl) {
+    newControl = new NaoFormControl(control.value, control.validator, control.asyncValidator) as any;
+  } else {
+    throw new Error('Error: unexpected control value');
+  }
+
+  if (control.disabled) {
+    newControl.disable({ emitEvent: false });
+  }
+
+  return newControl;
+}
 
 export {
   callNativeMarkAsFunction,
