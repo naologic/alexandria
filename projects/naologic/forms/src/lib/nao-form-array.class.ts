@@ -435,8 +435,8 @@ export class NaoFormArray<T = any> extends FormArray {
   /**
    * Clone the current formControl
    */
-  public clone(reset = false) {
-    const fc = cloneAbstractControl(this);
+  public clone(reset = false): NaoFormArray {
+    const fc = cloneAbstractControl<NaoFormArray>(this);
     if (reset) {
       fc.reset({ onlySelf: false, emitEvent: false });
     }

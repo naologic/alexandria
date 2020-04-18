@@ -137,8 +137,8 @@ export class NaoFormControl extends FormControl {
   /**
    * Clone the current formControl
    */
-  public clone(reset = false) {
-    const fc = cloneAbstractControl(this);
+  public clone(reset = false): NaoFormControl {
+    const fc = cloneAbstractControl<NaoFormControl>(this);
     if (reset) {
       fc.reset({ onlySelf: false, emitEvent: false });
     }

@@ -176,7 +176,7 @@ export class NaoFormGroup<T = any> extends FormGroup {
         if (control instanceof NaoFormGroup || control instanceof NaoFormArray) {
           this.markAs(control, type, options);
         } else {
-          callNativeMarkAsFunction(control, type, options);
+          callNativeMarkAsFunction(control as AbstractControl, type, options);
         }
       });
     }
@@ -485,8 +485,8 @@ export class NaoFormGroup<T = any> extends FormGroup {
   /**
    * Clone the current formControl
    */
-  public clone(reset = false) {
-    const fc = cloneAbstractControl(this);
+  public clone(reset = false): NaoFormGroup {
+    const fc = cloneAbstractControl<NaoFormGroup>(this);
     if (reset) {
       fc.reset({ onlySelf: false, emitEvent: false });
     }
