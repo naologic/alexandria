@@ -38,7 +38,7 @@
     "core-js": "^3.3.5",
     "lodash": "^4.17.15",
     "rxjs": "~6.4.0",
-    "snyk": "^1.297.2",
+    "snyk": "^1.316.1",
     "zone.js": "^0.10.2"
   },
   "devDependencies": {
