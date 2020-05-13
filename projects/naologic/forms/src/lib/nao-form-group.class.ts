@@ -34,6 +34,16 @@ export class NaoFormGroup<T = any> extends FormGroup {
   }
 
   /**
+   * Replace control - is a setControl but it inherits validators
+   */
+  public replaceControl(name: string, control: AbstractControl): void {
+    // -->TODO:Get: validators
+    // -->Set: control
+    this.setControl(name, control);
+    // -->TODO:Set: validators
+  }
+
+  /**
    * Enable form after delay
    * @param delay
    * @param opts
