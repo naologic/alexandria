@@ -495,8 +495,19 @@ export class NaoFormGroup<T = any> extends FormGroup {
   /**
    * Clone the current formControl
    */
-  public clone(reset = false): NaoFormGroup {
-    const fc = cloneAbstractControl<NaoFormGroup>(this);
+  public clone(reset = false, formGroupKeys?: string[]): NaoFormGroup {
+    const fc = cloneAbstractControl<NaoFormGroup>(this, formGroupKeys, false);
+    if (reset) {
+      fc.reset({ onlySelf: false, emitEvent: false });
+    }
+    return fc;
+  }
+
+  /**
+   * Clone the current formGroup and exclude some keys
+   */
+  public cloneExclude(reset = false, formGroupKeys: string[]): NaoFormGroup {
+    const fc = cloneAbstractControl<NaoFormGroup>(this, formGroupKeys, true);
     if (reset) {
       fc.reset({ onlySelf: false, emitEvent: false });
     }
